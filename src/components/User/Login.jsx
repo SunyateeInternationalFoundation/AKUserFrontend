@@ -6,7 +6,7 @@ const Login = () => {
     email: "",
     password: "",
   });
-  //   const dispatch = useDispatch();
+  // const dispatch = useDispatch();
   const navigate = useNavigate();
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });

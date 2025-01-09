@@ -125,15 +125,19 @@ const LandingPage = () => {
                 <FaArrowRightLong className="text-white text-center mt-1 ml-2" />
               </button>
             </div>
-            <div className="relative">
-              <img
-                src="https://img.freepik.com/free-photo/young-woman-doing-speech-therapy-with-kids_23-2149110279.jpg?t=st=1736406817~exp=1736410417~hmac=e26c1cd1b27d5e15c50a4189741a19f8ad93d022ddfb5b5609a5ee22cc65d40d&w=1380"
-                alt="Therapy Services"
-                className="rounded-lg shadow-xl"
-                width={800}
-                height={400}
-              />
-            </div>
+            <div className="relative overflow-hidden rounded-lg shadow-lg transform hover:scale-105 transition-transform duration-500">
+  <img
+    src="https://img.freepik.com/free-photo/young-woman-doing-speech-therapy-with-kids_23-2149110279.jpg?t=st=1736406817~exp=1736410417~hmac=e26c1cd1b27d5e15c50a4189741a19f8ad93d022ddfb5b5609a5ee22cc65d40d&w=1380"
+    alt="Therapy Services"
+    className="rounded-lg shadow-xl w-full h-auto object-cover"
+  />
+  <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-0 hover:opacity-100 transition-opacity duration-500 flex items-end p-6">
+    <p className="text-white text-lg font-semibold">
+      Empowering lives through specialized therapy
+    </p>
+  </div>
+</div>
+
           </div>
         </section>
 
