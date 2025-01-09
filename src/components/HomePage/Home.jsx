@@ -1,14 +1,16 @@
 import { Outlet, Route, Routes } from "react-router-dom";
 import Login from "../User/Login";
 import Register from "../User/RegisterPage";
+import LandingPage from "../LandingPage/LandingPage";
 
 const Home = () => {
   return (
     <div className="flex flex-col h-screen">
-      <div className="p-4">
+      <div className="">
         <Routes>
           <Route path="/signin" element={<Login />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/" element={<LandingPage />} />
           {/* <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/my-services" element={<MyServices />} />
               <Route path="/job-execution" element={<JobExecution />} />
