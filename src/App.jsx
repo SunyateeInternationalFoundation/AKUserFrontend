@@ -1,6 +1,7 @@
 import "./App.css";
+import Home from "./components/HomePage/Home";
 // import Login from "./components/User/Login";
-import LandingPage from "./components/LandingPage/LandingPage";
+
 
 function App() {
   return (
@@ -8,7 +9,7 @@ function App() {
       {/* <Routes>
         <Route path="/" element={<Register />}></Route>
       </Routes> */}
-      <LandingPage />
+      <Home />
     </>
   );
 }
