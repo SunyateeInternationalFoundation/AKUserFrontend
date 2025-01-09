@@ -1,6 +1,6 @@
+import axios from "axios";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import axios from "axios";
 const Login = () => {
   const [formData, setFormData] = useState({
     email: "",
@@ -32,7 +32,7 @@ const Login = () => {
         };
         alert("Sign In Successful!");
         // dispatch(setProviderLogin(payload));
-        // navigate("/dashboard");
+        navigate("/");
       }
     } catch (error) {
       console.error("Error during sign in", error);

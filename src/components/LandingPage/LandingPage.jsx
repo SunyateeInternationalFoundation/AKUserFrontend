@@ -3,17 +3,55 @@ import {
   Award,
   Brain,
   Heart,
-  HelpCircle,
   MessageSquare,
   School,
   Sparkles,
   Star,
   Users,
 } from "lucide-react";
+import { useState } from "react";
 import { FaArrowRightLong } from "react-icons/fa6";
 import { useNavigate } from "react-router-dom";
 const LandingPage = () => {
   const navigate = useNavigate();
+  const [currentTestimonial, setCurrentTestimonial] = useState(0);
+
+  const testimonials = [
+    {
+      name: "Norman David",
+
+      image:
+        "https://media.istockphoto.com/id/1388648617/photo/confident-caucasian-young-man-in-casual-denim-clothes-with-arms-crossed-looking-at-camera.jpg?s=1024x1024&w=is&k=20&c=3prfHYuD78OntE0-LpsVxQarrwouSPF1eUNA_AtMcDQ=",
+      rating: 5,
+      text: "Excels in providing a quick and easy way to find help for everyday tasks and home repairs. The platform is straightforward, allowing users to post tasks and receive from local",
+    },
+    {
+      name: "Adrian Janet",
+
+      image:
+        "https://media.istockphoto.com/id/1388648617/photo/confident-caucasian-young-man-in-casual-denim-clothes-with-arms-crossed-looking-at-camera.jpg?s=1024x1024&w=is&k=20&c=3prfHYuD78OntE0-LpsVxQarrwouSPF1eUNA_AtMcDQ=",
+      rating: 5,
+      text: "Offers a comprehensive marketplace for finding local service professionals across a wide range of categories, including home improvement, events, and personal services. The platform is user-friendly.",
+    },
+    {
+      name: "Adrian Janet",
+
+      image:
+        "https://media.istockphoto.com/id/1388648617/photo/confident-caucasian-young-man-in-casual-denim-clothes-with-arms-crossed-looking-at-camera.jpg?s=1024x1024&w=is&k=20&c=3prfHYuD78OntE0-LpsVxQarrwouSPF1eUNA_AtMcDQ=",
+      rating: 5,
+      text: "Offers a comprehensive marketplace for finding local service professionals across a wide range of categories, including home improvement, events, and personal services. The platform is user-friendly.",
+    },
+  ];
+
+  const nextTestimonial = () => {
+    setCurrentTestimonial((prev) => (prev + 1) % testimonials.length);
+  };
+
+  const prevTestimonial = () => {
+    setCurrentTestimonial(
+      (prev) => (prev - 1 + testimonials.length) % testimonials.length
+    );
+  };
   const services = [
     {
       title: "Autism Therapy",
@@ -88,11 +126,11 @@ const LandingPage = () => {
             </div>
             <div className="flex items-center space-x-6">
               <div className="flex items-center space-x-2">
-                <span className="text-sm">English, INR</span>
-                <span className="text-xs">▼</span>
+                {/* <span className="text-sm">English, INR</span>
+                <span className="text-xs">▼</span> */}
               </div>
               <button className="p-2 hover:text-pink-200">
-                <HelpCircle className="w-5 h-5" />
+                {/* <HelpCircle className="w-5 h-5" /> */}
               </button>
               <button
                 className="px-4 py-1.5 rounded-full border border-white text-sm hover:bg-white hover:text-pink-500 transition-colors"
@@ -157,7 +195,7 @@ const LandingPage = () => {
           </div>
         </section>
 
-        <section id="services" className="container mx-auto px-4 py-16">
+        <section id="services" className="container mx-auto px-4 py-16 mb-10">
           <h2 className="text-3xl font-bold text-center mb-12">
             Our Specialized Therapy Services
           </h2>
@@ -207,6 +245,112 @@ const LandingPage = () => {
                 </div>
               </div>
             ))}
+          </div>
+        </section>
+        <section id="testimonials" className="container mx-auto px-4 py-16">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-bold mb-4">What our clients say</h2>
+            <p className="text-gray-600 max-w-2xl mx-auto">
+              Real stories from families and professionals who have experienced
+              the transformative power of our specialized therapy services.
+            </p>
+          </div>
+
+          <div className="relative max-w-6xl mx-auto">
+            <div className="overflow-hidden">
+              <div
+                className="flex transition-transform duration-500 ease-in-out"
+                style={{
+                  transform: `translateX(-${currentTestimonial * 100}%)`,
+                }}
+              >
+                {testimonials.map((testimonial, index) => (
+                  <div key={index} className="w-full flex-shrink-0 px-4">
+                    <div className="bg-white rounded-lg shadow-lg p-8">
+                      <div className="flex flex-col items-center">
+                        <div className="w-24 h-24 rounded-full overflow-hidden mb-4">
+                          <img
+                            src={testimonial.image}
+                            alt={testimonial.name}
+                            className="w-full h-full object-cover"
+                          />
+                        </div>
+                        <div className="flex gap-1 mb-4">
+                          {[...Array(testimonial.rating)].map((_, i) => (
+                            <Star
+                              key={i}
+                              className="w-5 h-5 text-yellow-400 fill-yellow-400"
+                            />
+                          ))}
+                        </div>
+                        <p className="text-gray-600 text-center mb-6 text-lg">
+                          {testimonial.text}
+                        </p>
+                        <div className="text-center">
+                          <h4 className="font-semibold text-xl mb-1">
+                            {testimonial.name}
+                          </h4>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <button
+              onClick={prevTestimonial}
+              className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 bg-white p-2 rounded-full shadow-lg hover:bg-gray-100 transition-colors"
+              aria-label="Previous testimonial"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-6 w-6"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M15 19l-7-7 7-7"
+                />
+              </svg>
+            </button>
+            <button
+              onClick={nextTestimonial}
+              className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 bg-white p-2 rounded-full shadow-lg hover:bg-gray-100 transition-colors"
+              aria-label="Next testimonial"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-6 w-6"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M9 5l7 7-7 7"
+                />
+              </svg>
+            </button>
+
+            <div className="flex justify-center mt-8 gap-2">
+              {testimonials.map((_, index) => (
+                <button
+                  key={index}
+                  onClick={() => setCurrentTestimonial(index)}
+                  className={`w-3 h-3 rounded-full transition-colors ${
+                    currentTestimonial === index ? "bg-pink-500" : "bg-gray-300"
+                  }`}
+                  aria-label={`Go to testimonial ${index + 1}`}
+                />
+              ))}
+            </div>
           </div>
         </section>
       </div>
