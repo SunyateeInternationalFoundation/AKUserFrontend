@@ -187,7 +187,7 @@ const LandingPage = () => {
                   <img
                     src={service.image}
                     alt={`${service.title} illustration`}
-                    className="absolute inset-0 transform -translate-x-full group-hover:translate-x-0 transition-transform duration-500 ease-in-out"
+                    className="absolute inset-0 transform -translate-x-full group-hover:translate-x-0 transition-transform duration-1000 ease-in-out"
                   />
                   <div className="absolute inset-0 bg-pink-500 bg-opacity-75 flex items-center justify-center p-6">
                     <div className="h-full flex flex-col">

@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
 const Login = () => {
   const [formData, setFormData] = useState({
     email: "",
@@ -13,29 +14,29 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    // try {
-    //   const response = await axios.post(
-    //     `${import.meta.env.VITE_WEBSITE}/login`,
-    //     formData
-    //   );
+    try {
+      const response = await axios.post(
+        `${import.meta.env.VITE_WEBSITE}/login`,
+        formData
+      );
 
-    //   if (response.data.success) {
-    //     console.log("data", response.data.data);
-    //     const data = response.data.data;
-    //     const payload = {
-    //       providerId: data._id,
-    //       name: data?.name,
-    //       email: data?.email,
-    //       phone: data?.phone,
-    //       isLogin: true,
-    //     };
-    //     alert("Sign In Successful!");
-    //     dispatch(setProviderLogin(payload));
-    //     navigate("/dashboard");
-    //   }
-    // } catch (error) {
-    //   console.error("Error during sign in", error);
-    // }
+      if (response.data.success) {
+        console.log("data", response.data.data);
+        const data = response.data.data;
+        const payload = {
+          providerId: data._id,
+          name: data?.name,
+          email: data?.email,
+          phone: data?.phone,
+          isLogin: true,
+        };
+        alert("Sign In Successful!");
+        // dispatch(setProviderLogin(payload));
+        // navigate("/dashboard");
+      }
+    } catch (error) {
+      console.error("Error during sign in", error);
+    }
   };
 
   return (

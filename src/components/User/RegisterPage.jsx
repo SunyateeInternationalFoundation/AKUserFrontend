@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
 function Register() {
   const [formData, setFormData] = useState({
     name: "",
@@ -15,28 +16,29 @@ function Register() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    // try {
-    //   const response = await axios.post(
-    //     `${import.meta.env.VITE_WEBSITE}/register`,
-    //     formData
-    //   );
-    //   if (response.data.success) {
-    //     console.log("data", response.data.data);
-    //     const data = response.data.data;
-    //     const payload = {
-    //       providerId: data.providerId,
-    //       name: data?.name,
-    //       email: data?.email,
-    //       phone: data?.phone,
-    //       isLogin: true,
-    //     };
-    //     alert("Sign In Successful!");
-    //     dispatch(setProviderLogin(payload));
-    //     navigate("/dashboard");
-    //   }
-    // } catch (error) {
-    //   console.error("Error during sign up", error);
-    // }
+    try {
+      const response = await axios.post(
+        `${import.meta.env.VITE_WEBSITE}/register`,
+        formData
+      );
+      if (response.data.success) {
+        console.log("data", response.data.data);
+        const data = response.data.data;
+        const payload = {
+          providerId: data.providerId,
+          name: data?.name,
+          email: data?.email,
+          phone: data?.phone,
+          isLogin: true,
+        };
+
+        alert("Sign In Successful!");
+        // dispatch(setProviderLogin(payload));
+        // navigate("/");
+      }
+    } catch (error) {
+      console.error("Error during sign up", error);
+    }
     console.log("formdata", formData);
   };
 
