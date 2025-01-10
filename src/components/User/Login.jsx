@@ -1,12 +1,14 @@
 import axios from "axios";
 import { useState } from "react";
+import { useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
+import { setUserLogin } from "../../store/UserSlice";
 const Login = () => {
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
-  // const dispatch = useDispatch();
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -24,14 +26,14 @@ const Login = () => {
         console.log("data", response.data.data);
         const data = response.data.data;
         const payload = {
-          providerId: data._id,
+          userId: data._id,
           name: data?.name,
           email: data?.email,
           phone: data?.phone,
           isLogin: true,
         };
         alert("Sign In Successful!");
-        // dispatch(setProviderLogin(payload));
+        dispatch(setUserLogin(payload));
         navigate("/");
       }
     } catch (error) {

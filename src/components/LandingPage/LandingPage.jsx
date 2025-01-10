@@ -11,9 +11,14 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 import { FaArrowRightLong } from "react-icons/fa6";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { setUserLogout } from "../../store/UserSlice";
 const LandingPage = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const user = useSelector((state) => state.user);
+  console.log(user);
   const [currentTestimonial, setCurrentTestimonial] = useState(0);
 
   const testimonials = [
@@ -54,6 +59,7 @@ const LandingPage = () => {
   };
   const services = [
     {
+      id: 1,
       title: "Autism Therapy",
       icon: Brain,
       description:
@@ -62,6 +68,7 @@ const LandingPage = () => {
         "https://www.indiaautismcenter.org/wp-content/uploads/woman-doing-speech-therapy-with-little-blonde-boy-1-1024x683.jpg",
     },
     {
+      id: 2,
       title: "Speech Therapy",
       icon: MessageSquare,
       description: "Improving communication skills and language development.",
@@ -69,6 +76,7 @@ const LandingPage = () => {
         "https://media.istockphoto.com/id/1387959076/photo/speech-training-for-kids-professional-woman-training-with-little-boy-at-cabinet-teaching.jpg?s=1024x1024&w=is&k=20&c=4DgGR9XzczbdU8Qtn4kIjnPujDVptlFzUdnbgDk-zcA=",
     },
     {
+      id: 3,
       title: "Occupational Therapy",
       icon: Activity,
       description: "Enhancing daily living and motor skills for independence.",
@@ -76,6 +84,7 @@ const LandingPage = () => {
         "https://media.istockphoto.com/id/1356562169/photo/physical-therapist-showing-a-woman-an-exercise-for-her-recovery.jpg?s=1024x1024&w=is&k=20&c=RKFpqAZyCP0EKdf51SiFz5e6Zl385nGK9Yc-x_PPTac=",
     },
     {
+      id: 4,
       title: "Behavior Therapy",
       icon: Sparkles,
       description: "Addressing and modifying challenging behaviors.",
@@ -83,6 +92,7 @@ const LandingPage = () => {
         "https://breezerehabcentre.com/wp-content/uploads/2022/08/little-boy-having-occupational-therapy-session-with-psychologist-1024x683.jpg",
     },
     {
+      id: 5,
       title: "Special Education",
       icon: School,
       description: "Tailored educational programs for diverse learning needs.",
@@ -90,6 +100,7 @@ const LandingPage = () => {
         "https://media.istockphoto.com/id/911625672/photo/watching-a-video-together.jpg?s=1024x1024&w=is&k=20&c=8cdvDWDZjQcgRwVAITif5cyY8b62cY1A2cL2-_yE-Io=",
     },
     {
+      id: 6,
       title: "Psychological Counselling",
       icon: Heart,
       description: "Supporting mental health and emotional well-being.",
@@ -104,7 +115,11 @@ const LandingPage = () => {
     { icon: Award, value: "6+", label: "Specialized Services" },
     { icon: Star, value: "4.9★", label: "Client Rating" },
   ];
-
+  console.log("service", services);
+  const handleLogout = () => {
+    dispatch(setUserLogout());
+    window.location.href = "/";
+  };
   return (
     <>
       <div className="min-h-screen bg-gradient-to-b from-pink-100 to-white">
@@ -132,14 +147,23 @@ const LandingPage = () => {
               <button className="p-2 hover:text-pink-200">
                 {/* <HelpCircle className="w-5 h-5" /> */}
               </button>
-              <button
-                className="px-4 py-1.5 rounded-full border border-white text-sm hover:bg-white hover:text-pink-500 transition-colors"
-                onClick={() => {
-                  navigate("/signin");
-                }}
-              >
-                Log In
-              </button>
+              {user.isLogin ? (
+                <button
+                  className="px-4 py-1.5 rounded-full border border-white text-sm hover:bg-white hover:text-pink-500 transition-colors"
+                  onClick={handleLogout}
+                >
+                  Log Out
+                </button>
+              ) : (
+                <button
+                  className="px-4 py-1.5 rounded-full border border-white text-sm hover:bg-white hover:text-pink-500 transition-colors"
+                  onClick={() => {
+                    navigate("/signin");
+                  }}
+                >
+                  Log In
+                </button>
+              )}
             </div>
           </div>
         </nav>
@@ -153,29 +177,40 @@ const LandingPage = () => {
               <p className="text-xl text-gray-600">
                 Expert care and support for your journey to wellness
               </p>
-              <button
-                className="flex items-center bg-pink-600 text-white px-10 py-2 rounded-lg text-lg font-semibold hover:bg-pink-700 transition-colors"
-                onClick={() => {
-                  navigate("/signin");
-                }}
-              >
-                Login{" "}
-                <FaArrowRightLong className="text-white text-center mt-1 ml-2" />
-              </button>
+              {user.isLogin ? (
+                <button
+                  className="flex items-center bg-pink-600 text-white px-10 py-2 rounded-lg text-lg font-semibold hover:bg-pink-700 transition-colors"
+                  // onClick={() => {
+                  //   navigate("/signin");
+                  // }}
+                >
+                  Get Started
+                  <FaArrowRightLong className="text-white text-center mt-1 ml-2" />
+                </button>
+              ) : (
+                <button
+                  className="flex items-center bg-pink-600 text-white px-10 py-2 rounded-lg text-lg font-semibold hover:bg-pink-700 transition-colors"
+                  onClick={() => {
+                    navigate("/signin");
+                  }}
+                >
+                  Login{" "}
+                  <FaArrowRightLong className="text-white text-center mt-1 ml-2" />
+                </button>
+              )}
             </div>
             <div className="relative overflow-hidden rounded-lg shadow-lg transform hover:scale-105 transition-transform duration-500">
-  <img
-    src="https://img.freepik.com/free-photo/young-woman-doing-speech-therapy-with-kids_23-2149110279.jpg?t=st=1736406817~exp=1736410417~hmac=e26c1cd1b27d5e15c50a4189741a19f8ad93d022ddfb5b5609a5ee22cc65d40d&w=1380"
-    alt="Therapy Services"
-    className="rounded-lg shadow-xl w-full h-auto object-cover"
-  />
-  <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-0 hover:opacity-100 transition-opacity duration-500 flex items-end p-6">
-    <p className="text-white text-lg font-semibold">
-      Empowering lives through specialized therapy
-    </p>
-  </div>
-</div>
-
+              <img
+                src="https://img.freepik.com/free-photo/young-woman-doing-speech-therapy-with-kids_23-2149110279.jpg?t=st=1736406817~exp=1736410417~hmac=e26c1cd1b27d5e15c50a4189741a19f8ad93d022ddfb5b5609a5ee22cc65d40d&w=1380"
+                alt="Therapy Services"
+                className="rounded-lg shadow-xl w-full h-auto object-cover"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-0 hover:opacity-100 transition-opacity duration-500 flex items-end p-6">
+                <p className="text-white text-lg font-semibold">
+                  Empowering lives through specialized therapy
+                </p>
+              </div>
+            </div>
           </div>
         </section>
 
@@ -208,6 +243,9 @@ const LandingPage = () => {
               <div
                 key={service.title}
                 className="relative bg-white rounded-lg shadow-md overflow-hidden group h-64"
+                onClick={() => {
+                  navigate(`/service-providerlist/${service.id}`);
+                }}
               >
                 <div className="p-6 h-full flex flex-col">
                   <div>

@@ -1,7 +1,9 @@
 import { Outlet, Route, Routes } from "react-router-dom";
+import Booking from "../Booking/Booking";
+import LandingPage from "../LandingPage/LandingPage";
+import ProviderList from "../serviceProviderList/ProviderList";
 import Login from "../User/Login";
 import Register from "../User/RegisterPage";
-import LandingPage from "../LandingPage/LandingPage";
 
 const Home = () => {
   return (
@@ -11,6 +13,8 @@ const Home = () => {
           <Route path="/signin" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/" element={<LandingPage />} />
+          <Route path="/service-providerlist/:id" element={<ProviderList />} />
+          <Route path="/booking/:id" element={<Booking />} />
           {/* <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/my-services" element={<MyServices />} />
               <Route path="/job-execution" element={<JobExecution />} />
