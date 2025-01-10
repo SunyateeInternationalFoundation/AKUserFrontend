@@ -5,6 +5,7 @@ import ParentDashboard from "../ParentDashboard/ParentDashboard";
 import ParentSidebar from "../ParentSidebar/ParentSidebar";
 
 import { Link } from "react-router-dom";
+import Feedback from "../Feedback/Feedback";
 const ParentHome = () => {
   return (
     <div className="flex flex-col min-h-screen bg-gray-50">
@@ -14,6 +15,7 @@ const ParentHome = () => {
         <main className="flex-1 overflow-y-auto">
           <Routes>
             <Route path="/dashboard" element={<ParentDashboard />} />
+            <Route path="/feedback" element={<Feedback />} />
           </Routes>
           <Outlet />
         </main>
