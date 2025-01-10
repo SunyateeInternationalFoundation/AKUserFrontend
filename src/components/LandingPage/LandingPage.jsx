@@ -140,12 +140,12 @@ const LandingPage = () => {
               </div>
             </div>
             <div className="flex items-center space-x-6">
-              <div className="flex items-center space-x-2">
-                {/* <span className="text-sm">English, INR</span>
-                <span className="text-xs">▼</span> */}
-              </div>
+              {/* <div className="flex items-center space-x-2 cursor-pointer">
+                Child Profile
+              </div> */}
               <button className="p-2 hover:text-pink-200">
                 {/* <HelpCircle className="w-5 h-5" /> */}
+                Child Profile
               </button>
               {user.isLogin ? (
                 <button
