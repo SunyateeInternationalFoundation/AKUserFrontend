@@ -87,6 +87,7 @@ const ProviderList = () => {
             </div>
             <button className="p-2 hover:text-pink-200">
               {/* <HelpCircle className="w-5 h-5" /> */}
+              Child Profile
             </button>
             {user.isLogin ? (
               <button
