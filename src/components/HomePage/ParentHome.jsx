@@ -6,6 +6,7 @@ import ParentSidebar from "../ParentSidebar/ParentSidebar";
 
 import { Link } from "react-router-dom";
 import Feedback from "../Feedback/Feedback";
+import Services from "../Services/Services";
 const ParentHome = () => {
   return (
     <div className="flex flex-col min-h-screen bg-gray-50">
@@ -16,6 +17,7 @@ const ParentHome = () => {
           <Routes>
             <Route path="/dashboard" element={<ParentDashboard />} />
             <Route path="/feedback" element={<Feedback />} />
+            <Route path="/services" element={<Services/>} />
           </Routes>
           <Outlet />
         </main>
