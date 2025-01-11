@@ -8,6 +8,7 @@ import { Link } from "react-router-dom";
 import StaffSelection from "../ChildProfile/ChildForm";
 import ChildProfile from "../ChildProfile/ChildProfile";
 import Feedback from "../Feedback/Feedback";
+import Bookings from "../MyBookings/Bookings";
 import Services from "../Services/Services";
 const ParentHome = () => {
   return (
@@ -19,12 +20,13 @@ const ParentHome = () => {
           <Routes>
             <Route path="/dashboard" element={<ParentDashboard />} />
             <Route path="/feedback" element={<Feedback />} />
-            <Route path="/services" element={<Services/>} />
+            <Route path="/services" element={<Services />} />
             <Route path="/child-profile" element={<ChildProfile />} />
             <Route
               path="/child-profile/add-profile"
               element={<StaffSelection />}
             />
+            <Route path="/bookings" element={<Bookings />} />
           </Routes>
           <Outlet />
         </main>

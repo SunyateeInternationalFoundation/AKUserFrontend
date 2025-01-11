@@ -1,15 +1,16 @@
+import axios from "axios";
 import { Circle, CircleDot } from "lucide-react";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { AdmissionGoalsForm } from "./AdmissionGoalsForm";
 import { BasicInfoForm } from "./BasicInfoForm";
 import { BehavioralInfoForm } from "./BehavioralInfoForm";
 import { DocumentUploadForm } from "./DocumentUploadForm";
 import { MedicalInfoForm } from "./MedicalInfoForm";
 import { TherapyHistoryForm } from "./TherapyHistoryForm";
-
 export default function StaffSelection() {
   const [currentStep, setCurrentStep] = useState(1);
-
+  const navigate = useNavigate();
   const handleNext = () => {
     setCurrentStep(currentStep + 1);
   };
@@ -18,9 +19,33 @@ export default function StaffSelection() {
     setCurrentStep(currentStep - 1);
   };
 
-  const handleSubmit = () => {
-    // Handle final form submission
-    console.log("Form submitted!");
+  const handleSubmit = async () => {
+    const basicInfo = JSON.parse(sessionStorage.getItem("basicInfo"));
+    const medicalInfo = JSON.parse(sessionStorage.getItem("medicalInfo"));
+    const behavioralInfo = JSON.parse(sessionStorage.getItem("behavioralInfo"));
+    const therapyHistory = JSON.parse(sessionStorage.getItem("therapyHistory"));
+    const admissionGoal = JSON.parse(sessionStorage.getItem("admissionGoal"));
+
+    const formData = {
+      basicInfo: { ...basicInfo },
+      medicalInfo: { ...medicalInfo },
+      behavioralInfo: { ...behavioralInfo },
+      therapyHistory: { ...therapyHistory },
+      admissionGoal: { ...admissionGoal },
+    };
+    console.log("alldetails,", formData);
+    try {
+      const response = await axios.post(
+        `${import.meta.env.VITE_WEBSITE}/new-child`,
+        formData
+      );
+      console.log("Form submitted successfully!", response.data);
+      alert("Form submitted successfully!");
+      navigate("/child-profile");
+      sessionStorage.clear();
+    } catch (err) {
+      console.error("Error submitting form:", err);
+    }
   };
 
   const steps = [

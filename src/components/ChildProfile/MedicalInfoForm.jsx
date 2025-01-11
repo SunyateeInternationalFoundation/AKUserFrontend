@@ -19,9 +19,11 @@ export function MedicalInfoForm({ onNext, onPrev }) {
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log(formData);
+    sessionStorage.setItem("medicalInfo", JSON.stringify(formData));
     onNext();
   };
-
+  const medicalInfo = JSON.parse(sessionStorage.getItem("medicalInfo"));
+  console.log("medicalInfo", medicalInfo);
   return (
     <div className="w-full h-full max-w-4xl mx-auto p-6 bg-white rounded-lg shadow overflow-y-auto">
       <h2 className="text-2xl font-bold mb-6">Medical Information</h2>
@@ -38,7 +40,7 @@ export function MedicalInfoForm({ onNext, onPrev }) {
               type="date"
               id="dateOfDiagnosis"
               name="dateOfDiagnosis"
-              value={formData.dateOfDiagnosis}
+              value={formData?.dateOfDiagnosis || medicalInfo?.dateOfDiagnosis}
               onChange={handleChange}
               className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
@@ -55,7 +57,10 @@ export function MedicalInfoForm({ onNext, onPrev }) {
               type="text"
               id="diagnosingSpecialist"
               name="diagnosingSpecialist"
-              value={formData.diagnosingSpecialist}
+              value={
+                formData?.diagnosingSpecialist ||
+                medicalInfo?.diagnosingSpecialist
+              }
               onChange={handleChange}
               className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
@@ -71,7 +76,10 @@ export function MedicalInfoForm({ onNext, onPrev }) {
             <textarea
               id="coOccurringConditions"
               name="coOccurringConditions"
-              value={formData.coOccurringConditions}
+              value={
+                formData?.coOccurringConditions ||
+                medicalInfo?.coOccurringConditions
+              }
               onChange={handleChange}
               className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               rows={3}
@@ -89,7 +97,7 @@ export function MedicalInfoForm({ onNext, onPrev }) {
               type="text"
               id="allergies"
               name="allergies"
-              value={formData.allergies}
+              value={formData?.allergies || medicalInfo?.allergies}
               onChange={handleChange}
               className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
@@ -106,7 +114,7 @@ export function MedicalInfoForm({ onNext, onPrev }) {
               type="text"
               id="medications"
               name="medications"
-              value={formData.medications}
+              value={formData?.medications || medicalInfo?.medications}
               onChange={handleChange}
               className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
@@ -123,7 +131,10 @@ export function MedicalInfoForm({ onNext, onPrev }) {
               type="text"
               id="primaryHealthcareProviderName"
               name="primaryHealthcareProviderName"
-              value={formData.primaryHealthcareProviderName}
+              value={
+                formData?.primaryHealthcareProviderName ||
+                medicalInfo?.primaryHealthcareProviderName
+              }
               onChange={handleChange}
               className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
@@ -140,7 +151,10 @@ export function MedicalInfoForm({ onNext, onPrev }) {
               type="tel"
               id="primaryHealthcareProviderContact"
               name="primaryHealthcareProviderContact"
-              value={formData.primaryHealthcareProviderContact}
+              value={
+                formData?.primaryHealthcareProviderContact ||
+                medicalInfo?.primaryHealthcareProviderContact
+              }
               onChange={handleChange}
               className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             />

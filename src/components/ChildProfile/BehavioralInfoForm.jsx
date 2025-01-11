@@ -21,9 +21,11 @@ export function BehavioralInfoForm({ onNext, onPrev }) {
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log(formData);
+    sessionStorage.setItem("behavioralInfo", JSON.stringify(formData));
     onNext();
   };
-
+  const behavioralInfo = JSON.parse(sessionStorage.getItem("behavioralInfo"));
+  console.log("behavioralInfo", behavioralInfo);
   return (
     <div className="w-full h-full max-w-4xl mx-auto p-6 bg-white rounded-lg shadow overflow-y-auto">
       <h2 className="text-2xl font-bold mb-6">
@@ -35,7 +37,10 @@ export function BehavioralInfoForm({ onNext, onPrev }) {
           <div className="space-y-2">
             <select
               name="communicationSkills"
-              value={formData.communicationSkills}
+              value={
+                formData?.communicationSkills ||
+                behavioralInfo?.communicationSkills
+              }
               onChange={handleChange}
               className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
@@ -58,7 +63,10 @@ export function BehavioralInfoForm({ onNext, onPrev }) {
             <textarea
               id="communicationDetails"
               name="communicationDetails"
-              value={formData.communicationDetails}
+              value={
+                formData?.communicationDetails ||
+                behavioralInfo?.communicationDetails
+              }
               onChange={handleChange}
               className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               rows={3}
@@ -71,7 +79,9 @@ export function BehavioralInfoForm({ onNext, onPrev }) {
           <div className="space-y-2">
             <select
               name="socialInteraction"
-              value={formData.socialInteraction}
+              value={
+                formData?.socialInteraction || behavioralInfo?.socialInteraction
+              }
               onChange={handleChange}
               className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
@@ -95,7 +105,10 @@ export function BehavioralInfoForm({ onNext, onPrev }) {
             <textarea
               id="socialInteractionDetails"
               name="socialInteractionDetails"
-              value={formData.socialInteractionDetails}
+              value={
+                formData?.socialInteractionDetails ||
+                behavioralInfo?.socialInteraction
+              }
               onChange={handleChange}
               className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               rows={3}
@@ -118,7 +131,10 @@ export function BehavioralInfoForm({ onNext, onPrev }) {
               type="text"
               id="sensoryPreferences"
               name="sensoryPreferences"
-              value={formData.sensoryPreferences}
+              value={
+                formData?.sensoryPreferences ||
+                behavioralInfo?.sensoryPreferences
+              }
               onChange={handleChange}
               className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               placeholder="e.g., Sensitivity to sound, light, textures"
@@ -134,7 +150,7 @@ export function BehavioralInfoForm({ onNext, onPrev }) {
             <textarea
               id="sensoryDetails"
               name="sensoryDetails"
-              value={formData.sensoryDetails}
+              value={formData?.sensoryDetails || behavioralInfo?.sensoryDetails}
               onChange={handleChange}
               className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               rows={3}
@@ -155,7 +171,10 @@ export function BehavioralInfoForm({ onNext, onPrev }) {
               type="text"
               id="repetitiveBehaviors"
               name="repetitiveBehaviors"
-              value={formData.repetitiveBehaviors}
+              value={
+                formData?.repetitiveBehaviors ||
+                behavioralInfo?.repetitiveBehaviors
+              }
               onChange={handleChange}
               className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               placeholder="e.g., hand-flapping, rocking"
@@ -172,7 +191,9 @@ export function BehavioralInfoForm({ onNext, onPrev }) {
               type="text"
               id="meltdownTriggers"
               name="meltdownTriggers"
-              value={formData.meltdownTriggers}
+              value={
+                formData?.meltdownTriggers || behavioralInfo?.meltdownTriggers
+              }
               onChange={handleChange}
               className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
@@ -188,7 +209,9 @@ export function BehavioralInfoForm({ onNext, onPrev }) {
               type="text"
               id="calmingStrategies"
               name="calmingStrategies"
-              value={formData.calmingStrategies}
+              value={
+                formData?.calmingStrategies || behavioralInfo?.calmingStrategies
+              }
               onChange={handleChange}
               className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             />

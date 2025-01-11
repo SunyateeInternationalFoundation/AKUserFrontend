@@ -21,6 +21,7 @@ export function BasicInfoForm({ onNext }) {
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log(formData);
+    sessionStorage.setItem("basicInfo", JSON.stringify(formData));
     onNext();
   };
 
@@ -31,7 +32,8 @@ export function BasicInfoForm({ onNext }) {
       [name]: value,
     }));
   };
-
+  const basicInfo = JSON.parse(sessionStorage.getItem("basicInfo"));
+  console.log("basicInfo", basicInfo);
   return (
     <div className="w-full h-full max-w-4xl mx-auto p-6 bg-white rounded-lg shadow overflow-y-auto">
       <h2 className="text-2xl font-bold mb-6">Basic Information</h2>
@@ -50,7 +52,7 @@ export function BasicInfoForm({ onNext }) {
               id="childFullName"
               name="childFullName"
               className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              value={formData.childFullName}
+              value={formData?.childFullName || basicInfo?.childFullName}
               onChange={handleChange}
             />
           </div>
@@ -67,7 +69,7 @@ export function BasicInfoForm({ onNext }) {
               id="dateOfBirth"
               name="dateOfBirth"
               className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              value={formData.dateOfBirth}
+              value={formData?.dateOfBirth || basicInfo?.dateOfBirth}
               onChange={handleChange}
             />
           </div>
@@ -83,7 +85,7 @@ export function BasicInfoForm({ onNext }) {
               id="gender"
               name="gender"
               className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              value={formData.gender}
+              value={formData?.gender || basicInfo?.gender}
               onChange={handleChange}
             >
               <option value="">Select gender</option>
@@ -105,7 +107,9 @@ export function BasicInfoForm({ onNext }) {
               id="parentGuardianName"
               name="parentGuardianName"
               className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              value={formData.parentGuardianName}
+              value={
+                formData?.parentGuardianName || basicInfo?.parentGuardianName
+              }
               onChange={handleChange}
             />
           </div>
@@ -126,7 +130,7 @@ export function BasicInfoForm({ onNext }) {
                 id="phoneNumber"
                 name="phoneNumber"
                 className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                value={formData.phoneNumber}
+                value={formData?.phoneNumber || basicInfo?.phoneNumber}
                 onChange={handleChange}
               />
             </div>
@@ -143,7 +147,7 @@ export function BasicInfoForm({ onNext }) {
                 id="email"
                 name="email"
                 className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                value={formData.email}
+                value={formData?.email || basicInfo?.email}
                 onChange={handleChange}
               />
             </div>
@@ -160,7 +164,7 @@ export function BasicInfoForm({ onNext }) {
                 id="address"
                 name="address"
                 className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                value={formData.address}
+                value={formData?.address || basicInfo?.address}
                 onChange={handleChange}
               />
             </div>
@@ -177,7 +181,9 @@ export function BasicInfoForm({ onNext }) {
                 id="preferredLanguage"
                 name="preferredLanguage"
                 className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                value={formData.preferredLanguage}
+                value={
+                  formData?.preferredLanguage || basicInfo?.preferredLanguage
+                }
                 onChange={handleChange}
               />
             </div>
@@ -199,7 +205,9 @@ export function BasicInfoForm({ onNext }) {
                 id="primaryContactName"
                 name="primaryContactName"
                 className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                value={formData.primaryContactName}
+                value={
+                  formData?.primaryContactName || basicInfo?.primaryContactName
+                }
                 onChange={handleChange}
               />
             </div>
@@ -216,7 +224,10 @@ export function BasicInfoForm({ onNext }) {
                 id="primaryRelationship"
                 name="primaryRelationship"
                 className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                value={formData.primaryRelationship}
+                value={
+                  formData?.primaryRelationship ||
+                  basicInfo?.primaryRelationship
+                }
                 onChange={handleChange}
               />
             </div>
@@ -233,7 +244,7 @@ export function BasicInfoForm({ onNext }) {
                 id="primaryPhone"
                 name="primaryPhone"
                 className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                value={formData.primaryPhone}
+                value={formData?.primaryPhone || basicInfo?.primaryPhone}
                 onChange={handleChange}
               />
             </div>
@@ -252,7 +263,10 @@ export function BasicInfoForm({ onNext }) {
                 id="secondaryContactName"
                 name="secondaryContactName"
                 className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                value={formData.secondaryContactName}
+                value={
+                  formData?.secondaryContactName ||
+                  basicInfo?.secondaryContactName
+                }
                 onChange={handleChange}
               />
             </div>
@@ -269,7 +283,10 @@ export function BasicInfoForm({ onNext }) {
                 id="secondaryRelationship"
                 name="secondaryRelationship"
                 className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                value={formData.secondaryRelationship}
+                value={
+                  formData?.secondaryRelationship ||
+                  basicInfo?.secondaryRelationship
+                }
                 onChange={handleChange}
               />
             </div>
@@ -286,7 +303,7 @@ export function BasicInfoForm({ onNext }) {
                 id="secondaryPhone"
                 name="secondaryPhone"
                 className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                value={formData.secondaryPhone}
+                value={formData?.secondaryPhone || basicInfo?.secondaryPhone}
                 onChange={handleChange}
               />
             </div>
