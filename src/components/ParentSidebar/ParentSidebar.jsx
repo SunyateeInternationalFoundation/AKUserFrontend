@@ -30,7 +30,7 @@ const ParentSidebar = () => {
   ];
 
   const settingsSubItems = [
-    { label: "Parent Profile", path: "/settings/profile" },
+    { label: "Parent Profile", path: "/settings/parent-profile" },
   ];
 
   const handleNavigation = (path) => {
