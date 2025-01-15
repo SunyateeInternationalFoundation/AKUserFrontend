@@ -109,7 +109,7 @@ export default function StaffSelection() {
   };
 
   return (
-    <div className="flex p-6 bg-gray-100 h-[750px] mt-28 mx-44">
+    <div className="flex p-6 bg-gray-100 h-[750px] mt-23 mx-44">
       <div className="w-1/4 bg-gradient-to-b from-slate-900 to-slate-800 text-white p-6 rounded-xl">
         <div className="mb-8">
           <h2 className="text-lg font-semibold mb-4">Children Details</h2>
