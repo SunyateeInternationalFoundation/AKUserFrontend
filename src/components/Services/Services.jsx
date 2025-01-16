@@ -1,6 +1,6 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-
+import { FreeTrialModal } from "./FreeTrialModal";
 const Services = () => {
   const [services, setServices] = useState([]);
 
@@ -17,44 +17,50 @@ const Services = () => {
     }
     fetchServices();
   }, []);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedService, setSelectedService] = useState(null);
   // const services = [
   //   {
   //     _id: "6776797ae8df989a5ac2a371",
   //     name: "Speech Therapy",
   //     about: "Improves speech and communication skills.",
   //     price: 1500,
-  //     sessions: 5
+  //     sessions: 5,
   //   },
   //   {
   //     _id: "6776797ae8df989a5ac2a372",
   //     name: "Occupational Therapy",
   //     about: "Helps with daily living skills.",
   //     price: 1800,
-  //     sessions: 5
+  //     sessions: 5,
   //   },
   //   {
   //     _id: "6776797ae8df989a5ac2a373",
   //     name: "Behavior Therapy",
   //     about: "Addresses challenging behaviors.",
   //     price: 2200,
-  //     sessions: 5
+  //     sessions: 5,
   //   },
   //   {
   //     _id: "6776797ae8df989a5ac2a374",
   //     name: "Special Education",
   //     about: "Personalized education for special needs.",
   //     price: 2500,
-  //     sessions: 5
+  //     sessions: 5,
   //   },
   //   {
   //     _id: "6776797ae8df989a5ac2a370",
   //     name: "Autism Therapy",
   //     about: "Specialized therapy for children with autism.",
   //     price: 1000,
-  //     sessions: 5
-  //   }
+  //     sessions: 5,
+  //   },
   // ];
 
+  const handleFreeTrialClick = (service) => {
+    setSelectedService(service);
+    setIsModalOpen(true);
+  };
   return (
     <div className="p-8">
       <div className="flex justify-between items-center mb-8">
@@ -128,7 +134,10 @@ const Services = () => {
               </div>
 
               <div className="flex gap-2">
-                <button className="flex-1 border border-gray-300 text-gray-700 px-4 py-2 rounded hover:bg-gray-50">
+                <button
+                  className="flex-1 border border-gray-300 text-gray-700 px-4 py-2 rounded hover:bg-gray-50"
+                  onClick={() => handleFreeTrialClick(service)}
+                >
                   Free Trail
                 </button>
                 <button className="flex-1 border border-gray-300 text-gray-700 px-4 py-2 rounded hover:bg-gray-50">
@@ -139,6 +148,11 @@ const Services = () => {
           </div>
         ))}
       </div>
+      <FreeTrialModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        service={selectedService}
+      />
     </div>
   );
 };

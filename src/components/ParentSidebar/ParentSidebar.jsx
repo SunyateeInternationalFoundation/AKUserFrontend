@@ -9,10 +9,11 @@ import {
   User,
 } from "lucide-react";
 import { useState } from "react";
+import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-
 const ParentSidebar = () => {
   const navigate = useNavigate();
+  const parent = useSelector((state) => state.user);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
 
   const menuItems = [
@@ -48,8 +49,8 @@ const ParentSidebar = () => {
               className="rounded-full w-full h-full object-cover border-2 border-gray-100"
             />
           </div>
-          <h2 className="text-lg font-semibold">John Smith</h2>
-          <p className="text-sm text-gray-500">Customer Since Sep 2024</p>
+          <h2 className="text-lg font-semibold">{parent.name}</h2>
+          {/* <p className="text-sm text-gray-500">Customer Since Sep 2024</p> */}
         </div>
       </div>
 

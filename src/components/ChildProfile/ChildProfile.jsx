@@ -1,8 +1,32 @@
-import { PlusCircle } from "lucide-react";
-import React, {useState, useEffect} from "react";
-import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { Calendar, Phone, PlusCircle, User2 } from "lucide-react";
+import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+// const childProfiles = [
+//   {
+//     image:
+//       "https://img.freepik.com/free-psd/young-child-isolated_23-2151196479.jpg?t=st=1736760894~exp=1736764494~hmac=e09b665f6cb39139b252d7500cd4ce9f933536e84f3bdd4e0981bf31291bae18&w=826",
+//     name: "Sarah Johnson",
+//     service: "Autism Therapy",
+//     age: 8,
+//     gender: "Female",
+//     phoneNumber: "1234567890",
+//     dateOfBirth: "2015-05-15",
+//     parentName: "Michael Johnson",
+//   },
+//   {
+//     image:
+//       "https://img.freepik.com/free-psd/young-child-isolated_23-2151196479.jpg?t=st=1736760894~exp=1736764494~hmac=e09b665f6cb39139b252d7500cd4ce9f933536e84f3bdd4e0981bf31291bae18&w=826",
+//     name: "James Wilson",
+//     service: "Speech Therapy",
+//     age: 10,
+//     gender: "Male",
+//     phoneNumber: "9876543210",
+//     dateOfBirth: "2013-08-22",
+//     parentName: "Emma Wilson",
+//   },
+// ];
 
 export default function ChildProfile() {
   const navigate = useNavigate();
