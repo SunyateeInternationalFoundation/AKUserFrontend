@@ -1,6 +1,7 @@
 import axios from "axios";
 import { Circle, CircleDot } from "lucide-react";
 import { useState } from "react";
+import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { AdmissionGoalsForm } from "./AdmissionGoalsForm";
 import { BasicInfoForm } from "./BasicInfoForm";
@@ -9,6 +10,7 @@ import { DocumentUploadForm } from "./DocumentUploadForm";
 import { MedicalInfoForm } from "./MedicalInfoForm";
 import { TherapyHistoryForm } from "./TherapyHistoryForm";
 export default function StaffSelection() {
+  const parent = useSelector((state) => state.user);
   const [currentStep, setCurrentStep] = useState(1);
   const navigate = useNavigate();
   const handleNext = () => {
@@ -32,6 +34,7 @@ export default function StaffSelection() {
       behavioralInfo: { ...behavioralInfo },
       therapyHistory: { ...therapyHistory },
       admissionGoal: { ...admissionGoal },
+      parentId: parent.userId,
     };
     console.log("alldetails,", formData);
     try {
