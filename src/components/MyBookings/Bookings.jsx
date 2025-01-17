@@ -109,7 +109,7 @@ export default function Bookings() {
               <img
                 src={
                   booking?.image ||
-                  "https://media.istockphoto.com/id/1400106238/photo/child-psychotherapy.jpg?s=1024x1024&w=is&k=20&c=JWw50v1D1cyWwpS6XetnXEVFyRzs-JK8KvZF-QiVSvg="
+                  "https://www.indiaautismcenter.org/wp-content/uploads/woman-two-children-playing-with-wooden-toy-1.webp"
                 }
                 alt={booking?.service}
                 className="w-48 h-32 object-cover rounded-lg"
@@ -218,7 +218,7 @@ export default function Bookings() {
                         {booking.accepted && (
                           <button className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 text-sm flex items-center gap-2">
                             <span className="w-4 h-4">💬</span>
-                            Chat
+                            Feedback
                           </button>
                         )}
 

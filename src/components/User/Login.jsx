@@ -34,7 +34,7 @@ const Login = () => {
         };
         alert("Sign In Successful!");
         dispatch(setUserLogin(payload));
-        navigate("/");
+        navigate("/dashboard");
       }
     } catch (error) {
       console.error("Error during sign in", error);

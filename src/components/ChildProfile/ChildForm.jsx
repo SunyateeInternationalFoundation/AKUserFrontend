@@ -126,7 +126,7 @@ export default function StaffSelection() {
             </div>
 
             <div>
-              <p className="font-medium">Kayathri</p>
+              {/* <p className="font-medium">Kayathri</p> */}
               <div className="flex items-center gap-1 text-sm text-yellow-400">
                 {/* <span>★</span>
                 <span className="text-gray-300">4.9 (255 reviews)</span> */}

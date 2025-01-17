@@ -82,7 +82,7 @@ export default function ChildProfile() {
                   <img
                     src={
                       profile.image ||
-                      "https://img.freepik.com/free-psd/young-child-isolated_23-2151196479.jpg?t=st=1736760894~exp=1736764494~hmac=e09b665f6cb39139b252d7500cd4ce9f933536e84f3bdd4e0981bf31291bae18&w=826"
+                      "https://cdn.create.vista.com/api/media/medium/674346484/stock-photo-pretty-cute-indian-girl-child-smiling-looking-camera-green-nature?token="
                     }
                     alt={profile?.basicInfo?.childFullName}
                     className="w-full h-full object-cover rounded-lg"
@@ -103,7 +103,12 @@ export default function ChildProfile() {
                       <button className="w-16 px-2 py-1 text-sm bg-[#fee2e2] text-[#9d174d] rounded-md mr-5">
                         Update
                       </button>
-                      <button className="px-2 py-1 text-sm bg-pink-100 text-pink-700 rounded-md">
+                      <button
+                        className="px-2 py-1 text-sm bg-pink-100 text-pink-700 rounded-md"
+                        onClick={() => {
+                          navigate(`/child-details/${profile._id}`);
+                        }}
+                      >
                         View Details
                       </button>
                     </div>

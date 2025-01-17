@@ -5,6 +5,7 @@ import ParentDashboard from "../ParentDashboard/ParentDashboard";
 import ParentSidebar from "../ParentSidebar/ParentSidebar";
 
 import { Link } from "react-router-dom";
+import ChildDetailsPage from "../ChildProfile/ChildDetailsPage";
 import StaffSelection from "../ChildProfile/ChildForm";
 import ChildProfile from "../ChildProfile/ChildProfile";
 import Feedback from "../Feedback/Feedback";
@@ -27,6 +28,7 @@ const ParentHome = () => {
               path="/child-profile/add-profile"
               element={<StaffSelection />}
             />
+            <Route path="/child-details/:id" element={<ChildDetailsPage />} />
             <Route path="/bookings" element={<Bookings />} />
             <Route
               path="/settings/parent-profile"

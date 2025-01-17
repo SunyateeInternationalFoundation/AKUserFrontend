@@ -2,7 +2,6 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { IoCloudUploadOutline } from "react-icons/io5";
 import { useSelector } from "react-redux";
-
 const ParentProfile = () => {
   const parent = useSelector((state) => state.user);
   const [userData, setUserData] = useState({
@@ -72,7 +71,7 @@ const ParentProfile = () => {
             <img
               src={
                 userData.profilePicture ||
-                "https://www.alansonsample.com/images/Alanson_Headshot.jpg"
+                "https://as1.ftcdn.net/v2/jpg/06/54/32/40/1000_F_654324018_2M3RUmpX17hgOOftZEM2dUsCrnh62a6P.jpg"
               }
               alt="Profile"
               className="w-20 h-20 rounded-full object-cover"

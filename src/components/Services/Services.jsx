@@ -64,7 +64,7 @@ const Services = () => {
   return (
     <div className="p-8">
       <div className="flex justify-between items-center mb-8">
-        <h1 className="text-2xl font-bold">My Services</h1>
+        <h1 className="text-2xl font-bold">Therapies</h1>
         <div className="flex items-center gap-4">
           <span className="text-sm text-gray-500">Sort</span>
           <select className="border rounded p-1 text-sm">
@@ -134,14 +134,17 @@ const Services = () => {
               </div>
 
               <div className="flex gap-2">
-                <button
+                {/* <button
                   className="flex-1 border border-gray-300 text-gray-700 px-4 py-2 rounded hover:bg-gray-50"
                   onClick={() => handleFreeTrialClick(service)}
                 >
                   Free Trail
-                </button>
-                <button className="flex-1 border border-gray-300 text-gray-700 px-4 py-2 rounded hover:bg-gray-50">
-                  Book Session
+                </button> */}
+                <button
+                  className="flex-1 border border-gray-300 text-gray-700 px-4 py-2 rounded hover:bg-gray-50"
+                  onClick={() => handleFreeTrialClick(service)}
+                >
+                  Book Therapy
                 </button>
               </div>
             </div>
