@@ -90,33 +90,83 @@ export const FreeTrialModal = ({ isOpen, onClose, service }) => {
     setStep(step - 1);
   };
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (e) => {
     try {
-      const response = await axios.post(
-        `${import.meta.env.VITE_WEBSITE}/booking-trail`,
+      const response = await axios.get(
+        `${import.meta.env.VITE_WEBSITE}/payment`,
         {
-          serviceId: service._id,
-          child: selectedChild,
-          provider: selectedProvider,
-          date: selectedDate,
-          time: selectedTime,
-          parentId: parent.userId,
+          params: {
+            childId: selectedChild._id,
+            parentId: parent.userId,
+            serviceAmount: service.price,
+          },
         }
       );
-      if (response.data.success) {
-        navigate("/bookings");
-      }
-      console.log("Free Trial Booked", {
-        service,
-        child: selectedChild,
-        provider: selectedProvider,
-        date: selectedDate,
-        time: selectedTime,
+
+      console.log(response);
+      var options = {
+        key: response.data.key_id,
+        order_id: response.data.order.id,
+
+        handler: async function (response) {
+          console.log(response);
+          const res = await axios.post(
+            `${import.meta.env.VITE_WEBSITE}/payment`,
+
+            {
+              order_id: options.order_id,
+              payment_id: response.razorpay_payment_id,
+            },
+            {
+              params: {
+                childId: selectedChild._id,
+                parentId: parent.userId,
+              },
+            }
+          );
+          alert(
+            "Payment Successful! Your transaction has been completed successfully."
+          );
+        },
+      };
+      const paymentObject = new window.Razorpay(options);
+      paymentObject.open();
+      e.preventDefault();
+
+      paymentObject.on("payment.failed", function (response) {
+        console.log(response);
+        alert("Something went wrong");
       });
-      onClose();
     } catch (err) {
-      console.log("Error in submitting data", err);
+      console.log("Error In Payment Section:", err);
     }
+    // try {
+
+    //   const response = await axios.post(
+    //     `${import.meta.env.VITE_WEBSITE}/booking-trail`,
+    //     {
+    //       serviceId: service._id,
+    //       child: selectedChild,
+    //       provider: selectedProvider,
+    //       date: selectedDate,
+    //       time: selectedTime,
+    //       parentId: parent.userId,
+    //     }
+    //   );
+    //   if (response.data.success) {
+    //     navigate("/bookings");
+    //   }
+    //   console.log("Free Trial Booked", {
+    //     service,
+    //     child: selectedChild,
+    //     provider: selectedProvider,
+    //     date: selectedDate,
+    //     time: selectedTime,
+    //   });
+    //   onClose();
+    // } catch (err) {
+    //   console.log("Error in submitting data", err);
+    // }
   };
 
   const renderStep = () => {
@@ -221,6 +271,28 @@ export const FreeTrialModal = ({ isOpen, onClose, service }) => {
             </div>
           </div>
         );
+      case 4:
+        return (
+          <div>
+            <h4 className="text-lg font-semibold mb-4">Confirm and Pay</h4>
+            <p>Please review your booking details and proceed to payment.</p>
+            <div className="mt-4">
+              <p>
+                <strong>Child:</strong> {selectedChild?.basicInfo.childFullName}
+              </p>
+              <p>
+                <strong>Provider:</strong> {selectedProvider?.name}
+              </p>
+              <p>
+                <strong>Date:</strong>{" "}
+                {new Date(selectedDate).toLocaleDateString()}
+              </p>
+              <p>
+                <strong>Time:</strong> {selectedTime}
+              </p>
+            </div>
+          </div>
+        );
       default:
         return null;
     }
@@ -266,7 +338,6 @@ export const FreeTrialModal = ({ isOpen, onClose, service }) => {
             </button>
           )}
           <div className="flex-grow"></div>
-
           {step < 3 ? (
             <button
               onClick={handleNext}
@@ -274,12 +345,19 @@ export const FreeTrialModal = ({ isOpen, onClose, service }) => {
             >
               Next
             </button>
+          ) : step === 3 ? (
+            <button
+              onClick={handleNext}
+              className="px-4 py-2 bg-[#0d9488] text-white rounded"
+            >
+              Review and Pay
+            </button>
           ) : (
             <button
               onClick={handleSubmit}
               className="px-4 py-2 bg-[#0d9488] text-white rounded"
             >
-              Start Free Trial
+              Pay Now
             </button>
           )}
         </div>

@@ -102,9 +102,9 @@ export default function Bookings() {
         </div>
       </div>
 
-      <div className="space-y-6">
+      <div className="space-y-6  h-[700px] overflow-y-auto">
         {bookings.map((booking) => (
-          <div key={booking?.id} className="bg-white p-6 rounded-lg">
+          <div key={booking?.id} className="bg-white p-6 rounded-lg ">
             <div className="flex gap-6">
               <img
                 src={

@@ -224,7 +224,7 @@ const ChildDetailsPage = () => {
                   <div>
                     <p className="text-sm text-gray-500">Date of Diagnosis</p>
                     <p className="text-lg font-medium">
-                      {formatDate(child?.medicalInfo?.dateOfDiagnosis)}
+                      {child?.extraDetails?.medicalInfo?.dateOfDiagnosis}
                     </p>
                   </div>
                   <div>
@@ -232,13 +232,13 @@ const ChildDetailsPage = () => {
                       Diagnosing Specialist
                     </p>
                     <p className="text-lg font-medium">
-                      {child?.medicalInfo?.diagnosingSpecialist}
+                      {child?.extraDetails?.medicalInfo?.diagnosingSpecialist}
                     </p>
                   </div>
                   <div>
                     <p className="text-sm text-gray-500">Allergies</p>
                     <p className="text-lg font-medium">
-                      {child?.medicalInfo?.allergies}
+                      {child?.extraDetails?.medicalInfo?.allergies}
                     </p>
                   </div>
                   <div>
@@ -246,7 +246,7 @@ const ChildDetailsPage = () => {
                       Co-occurring Conditions
                     </p>
                     <p className="text-lg font-medium">
-                      {child?.medicalInfo?.coOccurringConditions}
+                      {child?.extraDetails?.medicalInfo?.coOccurringConditions}
                     </p>
                   </div>
                 </div>
@@ -264,19 +264,19 @@ const ChildDetailsPage = () => {
                       Communication Skills
                     </p>
                     <p className="text-lg font-medium">
-                      {child?.behavioralInfo?.communicationSkills}
+                      {child?.extraDetails?.behavioralInfo?.communicationSkills}
                     </p>
                   </div>
                   <div>
                     <p className="text-sm text-gray-500">Social Interaction</p>
                     <p className="text-lg font-medium">
-                      {child?.behavioralInfo?.socialInteraction}
+                      {child?.extraDetails?.behavioralInfo?.socialInteraction}
                     </p>
                   </div>
                   <div>
                     <p className="text-sm text-gray-500">Sensory Preferences</p>
                     <p className="text-lg font-medium">
-                      {child?.behavioralInfo?.sensoryPreferences}
+                      {child?.extraDetails?.behavioralInfo?.sensoryPreferences}
                     </p>
                   </div>
                 </div>
@@ -292,17 +292,18 @@ const ChildDetailsPage = () => {
                   <div>
                     <p className="text-sm text-gray-500">Current Therapies</p>
                     <div className="flex flex-wrap gap-2 mt-2">
-                      {child?.therapyHistory?.aba && (
+                      {child?.extraDetails?.therapyHistory?.aba && (
                         <span className="px-3 py-1 bg-green-100 text-green-800 rounded-full text-sm font-medium">
                           ABA Therapy
                         </span>
                       )}
-                      {child?.therapyHistory?.speechTherapy && (
+                      {child?.extraDetails?.therapyHistory?.speechTherapy && (
                         <span className="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm font-medium">
                           Speech Therapy
                         </span>
                       )}
-                      {child?.therapyHistory?.occupationalTherapy && (
+                      {child?.extraDetails?.therapyHistory
+                        ?.occupationalTherapy && (
                         <span className="px-3 py-1 bg-purple-100 text-purple-800 rounded-full text-sm font-medium">
                           Occupational Therapy
                         </span>
@@ -312,8 +313,8 @@ const ChildDetailsPage = () => {
                   <div>
                     <p className="text-sm text-gray-500">School Information</p>
                     <p className="text-lg font-medium">
-                      {child?.therapyHistory?.schoolName} - Grade{" "}
-                      {child?.therapyHistory?.gradeLevel}
+                      {child?.extraDetails?.therapyHistory?.schoolName} - Grade{" "}
+                      {child?.extraDetails?.therapyHistory?.gradeLevel}
                     </p>
                   </div>
                   <div>
@@ -321,16 +322,18 @@ const ChildDetailsPage = () => {
                       Preferred Therapy Modalities
                     </p>
                     <div className="flex flex-wrap gap-2 mt-2">
-                      {child?.extraDetails?.preferredTherapyModalities.map(
-                        (therapy) => (
-                          <span
-                            key={therapy}
-                            className="px-3 py-1 bg-indigo-100 text-indigo-800 rounded-full text-sm font-medium"
-                          >
-                            {therapy}
-                          </span>
-                        )
-                      )}
+                      {child?.extraDetails?.admissionGoal
+                        ?.preferredTherapyModalities?.length > 0 &&
+                        child?.extraDetails?.admissionGoal?.preferredTherapyModalities.map(
+                          (therapy) => (
+                            <span
+                              key={therapy}
+                              className="px-3 py-1 bg-indigo-100 text-indigo-800 rounded-full text-sm font-medium"
+                            >
+                              {therapy}
+                            </span>
+                          )
+                        )}
                     </div>
                   </div>
                 </div>
