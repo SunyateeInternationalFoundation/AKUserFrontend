@@ -7,7 +7,7 @@ export function TherapyHistoryForm({ onNext, onPrev }) {
     speechTherapy: false,
     occupationalTherapy: false,
     aba: false,
-    otherTherapy: "",
+    additionalTherapies: "",
     goalsAchieved: "",
     challengesObserved: "",
     strengthsAndInterests: "",

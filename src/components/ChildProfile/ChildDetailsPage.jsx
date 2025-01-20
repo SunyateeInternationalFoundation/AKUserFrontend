@@ -51,14 +51,14 @@ const ChildDetailsPage = () => {
             <h1 className="text-4xl font-bold text-indigo-800">
               Child Details
             </h1>
-            <div className="space-x-4">
+            {/* <div className="space-x-4">
               <button className="px-6 py-2 bg-gray-200 text-gray-800 rounded-full hover:bg-gray-300 transition-colors duration-300">
                 Print
               </button>
               <button className="px-6 py-2 bg-indigo-600 text-white rounded-full hover:bg-indigo-700 transition-colors duration-300">
                 Update Details
               </button>
-            </div>
+            </div> */}
           </div>
 
           <div className="flex space-x-4 mb-8 overflow-x-auto pb-4">

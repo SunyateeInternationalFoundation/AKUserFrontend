@@ -1,10 +1,8 @@
-import { Facebook, Instagram, Linkedin, Twitter } from "lucide-react";
 import React from "react";
 import { Outlet, Route, Routes } from "react-router-dom";
 import ParentDashboard from "../ParentDashboard/ParentDashboard";
 import ParentSidebar from "../ParentSidebar/ParentSidebar";
 
-import { Link } from "react-router-dom";
 import ChildDetailsPage from "../ChildProfile/ChildDetailsPage";
 import StaffSelection from "../ChildProfile/ChildForm";
 import ChildProfile from "../ChildProfile/ChildProfile";
@@ -38,14 +36,14 @@ const ParentHome = () => {
           <Outlet />
         </main>
       </div>
-      <footer className="bg-background py-12 border-t">
+      {/* <footer className="bg-background py-12 border-t">
         <div className="container px-4 mx-auto">
           <div className="mb-8">
             <h2 className="text-xl font-bold">Ausum Kids</h2>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {/* Company Information */}
+       
             <div className="space-y-4">
               <h3 className="font-semibold text-lg">Company</h3>
               <ul className="space-y-2">
@@ -92,7 +90,7 @@ const ParentHome = () => {
               </ul>
             </div>
 
-            {/* For Clients */}
+
             <div className="space-y-4">
               <h3 className="font-semibold text-lg">For Clients</h3>
               <ul className="space-y-2">
@@ -131,7 +129,6 @@ const ParentHome = () => {
               </ul>
             </div>
 
-            {/* For Therapists */}
             <div className="space-y-4">
               <h3 className="font-semibold text-lg">For Therapists</h3>
               <ul className="space-y-2">
@@ -162,7 +159,7 @@ const ParentHome = () => {
               </ul>
             </div>
 
-            {/* Social Links */}
+      
             <div className="space-y-4">
               <h3 className="font-semibold text-lg">Connect with us</h3>
               <div className="flex space-x-4">
@@ -223,7 +220,7 @@ const ParentHome = () => {
             </p>
           </div>
         </div>
-      </footer>
+      </footer> */}
     </div>
   );
 };
