@@ -8,7 +8,9 @@ import {
   Settings,
   Star,
   User,
+  Info
 } from "lucide-react";
+
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -43,11 +45,13 @@ const ParentSidebar = () => {
       path: "/dashboard",
     },
     { icon: User, label: "Child Profile", path: "/child-profile" },
+
     { icon: Calendar, label: "On Going Therapies", path: "/bookings" },
 
     { icon: Heart, label: "Book Therapies", path: "/therapies" },
 
     { icon: Star, label: "Feedback", path: "/feedback" },
+    {icon: Info, label: "Help & Support", path: "/help" }
   ];
 
   const settingsSubItems = [
