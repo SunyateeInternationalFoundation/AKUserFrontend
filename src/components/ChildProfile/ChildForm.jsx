@@ -1,7 +1,7 @@
 import axios from "axios";
 import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 import { Circle, CircleDot, Upload, User } from "lucide-react";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { storage } from "../../firebase";
@@ -18,6 +18,16 @@ export default function StaffSelection() {
   const [image, setImage] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
   const navigate = useNavigate();
+  useEffect(() => {
+    const getImage = () => {
+      const childImage = sessionStorage.getItem("image");
+      if (childImage) {
+        setImagePreview(childImage);
+      }
+      console.log("childImage", imagePreview);
+    };
+    getImage();
+  }, []);
   const handleNext = () => {
     setCurrentStep(currentStep + 1);
   };
@@ -29,6 +39,7 @@ export default function StaffSelection() {
   const handleImageUpload = (event) => {
     const file = event.target.files[0];
     setImagePreview(URL.createObjectURL(file));
+
     if (!file) return;
     const storageRef = ref(storage, `chidlProfiles/${file.name}`);
     const uploadTask = uploadBytesResumable(storageRef, file);
@@ -46,6 +57,7 @@ export default function StaffSelection() {
       async () => {
         const downloadUrl = await getDownloadURL(uploadTask.snapshot.ref);
         setImage(downloadUrl);
+        sessionStorage.setItem("image", downloadUrl);
       }
     );
   };
@@ -64,7 +76,7 @@ export default function StaffSelection() {
       therapyHistory: { ...therapyHistory },
       admissionGoal: { ...admissionGoal },
       parentId: parent.userId,
-      image: image,
+      image: imagePreview,
     };
     console.log("alldetails,", formData);
     try {
@@ -141,7 +153,7 @@ export default function StaffSelection() {
     }
   };
 
-  console.log("childImage", image);
+  // console.log("childImage", imagePreview);
 
   return (
     <div className="flex p-6 bg-gray-100 h-[750px] mt-23 mx-44">
@@ -154,7 +166,7 @@ export default function StaffSelection() {
               <div className="w-20 h-20 rounded-full overflow-hidden bg-slate-700 flex items-center justify-center">
                 {imagePreview ? (
                   <img
-                    src={imagePreview || "/placeholder.svg"}
+                    src={imagePreview}
                     alt="Profile Preview"
                     className="w-full h-full object-cover"
                   />

@@ -13,20 +13,42 @@ export function AdmissionGoalsForm({ onNext, onPrev }) {
   });
   useEffect(() => {
     const getDetails = () => {
-      const admissionInfo = JSON.parse(sessionStorage.getItem("admissionGoal"));
-      setFormData(admissionInfo);
+      const admissionInfo =
+        JSON.parse(sessionStorage.getItem("admissionGoal")) || {};
+      setFormData({
+        ...admissionInfo,
+        preferredTherapyModalities:
+          admissionInfo.preferredTherapyModalities || [],
+      });
     };
+
     getDetails();
   }, []);
+  // const handleChange = (e) => {
+  //   const { name, value, type } = e.target;
+  //   if (type === "checkbox") {
+  //     const checked = e.target.checked;
+  //     console.log("checked>>>", checked);
+  //     setFormData((prev) => ({
+  //       ...prev,
+  //       preferredTherapyModalities:
+  //         checked || []
+  //           ? [...prev.preferredTherapyModalities, value]
+  //           : prev?.preferredTherapyModalities.filter((item) => item !== value),
+  //     }));
+  //     console.log("formdata", formData);
+  //   } else {
+  //     setFormData((prev) => ({ ...prev, [name]: value }));
+  //   }
+  // };
   const handleChange = (e) => {
-    const { name, value, type } = e.target;
+    const { name, value, type, checked } = e.target;
     if (type === "checkbox") {
-      const checked = e.target.checked;
       setFormData((prev) => ({
         ...prev,
-        preferredTherapyModalities: checked
-          ? [...prev.preferredTherapyModalities, value]
-          : prev.preferredTherapyModalities.filter((item) => item !== value),
+        [name]: checked
+          ? [...(prev[name] || []), value]
+          : (prev[name] || []).filter((item) => item !== value),
       }));
     } else {
       setFormData((prev) => ({ ...prev, [name]: value }));
@@ -167,7 +189,7 @@ export function AdmissionGoalsForm({ onNext, onPrev }) {
                     name="preferredTherapyModalities"
                     value={therapy}
                     checked={(
-                      formData.preferredTherapyModalities || []
+                      formData?.preferredTherapyModalities || []
                     ).includes(therapy)}
                     onChange={handleChange}
                     className="form-checkbox h-5 w-5 text-blue-600"
