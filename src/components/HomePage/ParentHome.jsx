@@ -20,7 +20,7 @@ const ParentHome = () => {
           <Routes>
             <Route path="/dashboard" element={<ParentDashboard />} />
             <Route path="/feedback" element={<Feedback />} />
-            <Route path="/services" element={<Services />} />
+            <Route path="/therapies" element={<Services />} />
             <Route path="/child-profile" element={<ChildProfile />} />
             <Route
               path="/child-profile/add-profile"

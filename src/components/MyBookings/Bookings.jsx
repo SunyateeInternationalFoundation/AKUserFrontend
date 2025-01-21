@@ -1,69 +1,20 @@
 import axios from "axios";
-import { Calendar, Filter } from "lucide-react";
+import { Calendar, Filter, Star } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-
-// const bookings = [
-//   {
-//     id: 1,
-//     service: "Autism Therapy",
-//     status: "Cancelled",
-//     statusColor: "red",
-//     date: "27 Sep, 17:00-18:00",
-//     amount: 100.0,
-//     paymentMethod: "Gpay",
-//     location: "Hyderabad",
-//     provider: {
-//       name: "kayu",
-//       email: "kayu@gmail.com",
-//       phone: "+1 888 888 8888",
-//       image: "https://images8.alphacoders.com/398/thumb-1920-398553.jpg",
-//     },
-//     image:
-//       "https://media.istockphoto.com/id/1400106238/photo/child-psychotherapy.jpg?s=1024x1024&w=is&k=20&c=JWw50v1D1cyWwpS6XetnXEVFyRzs-JK8KvZF-QiVSvg=",
-//   },
-//   {
-//     id: 2,
-//     service: "Autism Therapy",
-//     status: "Completed",
-//     statusColor: "green",
-//     date: "23 Sep 2022, 10:00-11:00",
-//     amount: 50.0,
-//     paymentMethod: "Gpay",
-//     location: "Hyderabad",
-//     provider: {
-//       name: "kayu",
-//       email: "kayu@gmail.com",
-//       phone: "+1 888 888 8888",
-//       image: "https://images8.alphacoders.com/398/thumb-1920-398553.jpg",
-//     },
-//     image:
-//       "https://media.istockphoto.com/id/1400106238/photo/child-psychotherapy.jpg?s=1024x1024&w=is&k=20&c=JWw50v1D1cyWwpS6XetnXEVFyRzs-JK8KvZF-QiVSvg=",
-//   },
-//   {
-//     id: 3,
-//     service: "Autism Therapy",
-//     status: "On Going",
-//     statusColor: "blue",
-//     date: "22 Sep 2022, 11:00-12:00",
-//     amount: 50.0,
-//     paymentMethod: "Gpay",
-//     location: "Hyderabad",
-//     provider: {
-//       name: "kayu",
-//       email: "kayu@gmail.com",
-//       phone: "+1 888 888 8888",
-//       image: "https://images8.alphacoders.com/398/thumb-1920-398553.jpg",
-//     },
-//     image:
-//       "https://media.istockphoto.com/id/1400106238/photo/child-psychotherapy.jpg?s=1024x1024&w=is&k=20&c=JWw50v1D1cyWwpS6XetnXEVFyRzs-JK8KvZF-QiVSvg=",
-//   },
-// ];
-
 export default function Bookings() {
   const [bookings, setBookings] = useState([]);
   const parent = useSelector((state) => state.user);
+  const [rating, setRating] = useState({});
+  const [hoveredRating, setHoveredRating] = useState({});
+  const [reviews, setReviews] = useState({});
 
+  // const serviceDetails = {
+  //   name: "Computer Services",
+  //   location: "NewYork, USA",
+  //   image:
+  //     "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-wPyFvyCtKqPkXgjw1IQG7qPUPn3jFr.png",
+  // };
   useEffect(() => {
     async function fetchingBookingList() {
       try {
@@ -80,6 +31,47 @@ export default function Bookings() {
     }
     fetchingBookingList();
   }, [parent.userId]);
+
+  const handleFeedbackSubmit = async (
+    serviceId,
+    providerId,
+    parentId,
+    childId,
+    bookingId
+  ) => {
+    try {
+      await axios.post(`${import.meta.env.VITE_WEBSITE}/providers-feedback`, {
+        rating: rating[bookingId],
+        review: reviews[bookingId],
+        serviceId,
+        providerId,
+        parentId,
+        childId,
+        bookingId,
+      });
+    } catch (err) {
+      console.log("Error in sending feedback:", err);
+    }
+  };
+  const handleReviewChange = (bookingId, value) => {
+    setReviews((prevReviews) => ({
+      ...prevReviews,
+      [bookingId]: value,
+    }));
+  };
+  const handleRatingChange = (bookingId, value) => {
+    setRating((prevRating) => ({
+      ...prevRating,
+      [bookingId]: value,
+    }));
+  };
+  const handleHoverRating = (bookingId, value) => {
+    setHoveredRating((prevRating) => ({
+      ...prevRating,
+      [bookingId]: value,
+    }));
+  };
+
   console.log("bookinlist", bookings);
   return (
     <div className="p-8 bg-gray-50 min-h-screen">
@@ -104,7 +96,7 @@ export default function Bookings() {
 
       <div className="space-y-6  h-[700px] overflow-y-auto">
         {bookings.map((booking) => (
-          <div key={booking?.id} className="bg-white p-6 rounded-lg ">
+          <div key={booking?._id} className="bg-white p-6 rounded-lg ">
             <div className="flex gap-6">
               <img
                 src={
@@ -181,7 +173,7 @@ export default function Bookings() {
                               booking?.provider?.image ||
                               "https://images8.alphacoders.com/398/thumb-1920-398553.jpg"
                             }
-                            alt={booking?.provider?.name}
+                            alt={booking?.providerId?.name}
                             className="w-6 h-6 rounded-full"
                           />
                           <span>{booking?.providerId?.name}</span>
@@ -216,15 +208,75 @@ export default function Bookings() {
                     {booking?.status === "On Going" && (
                       <>
                         {booking.accepted && (
-                          <button className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 text-sm flex items-center gap-2">
-                            <span className="w-4 h-4">💬</span>
-                            Feedback
-                          </button>
+                          <div className="flex flex-col">
+                            <div className="space-y-2 px-6">
+                              <label className="text-sm font-medium">
+                                Write your Review
+                              </label>
+                              <textarea
+                                placeholder="Please write your review"
+                                value={reviews[booking._id]}
+                                onChange={(e) =>
+                                  handleReviewChange(
+                                    booking._id,
+                                    e.target.value
+                                  )
+                                }
+                                className="w-full min-h-[100px] p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                              />
+                            </div>
+                            <div className="space-y-2 px-6">
+                              <label className="text-base text-gray-800 font-medium">
+                                Rate The Service
+                              </label>
+                              <div className="flex gap-1">
+                                {[1, 2, 3, 4, 5].map((star) => (
+                                  <button
+                                    key={star}
+                                    type="button"
+                                    onClick={() =>
+                                      handleRatingChange(booking._id, star)
+                                    }
+                                    onMouseEnter={() =>
+                                      handleHoverRating(booking._id, star)
+                                    }
+                                    onMouseLeave={() => setHoveredRating(0)}
+                                    className="focus:outline-none"
+                                  >
+                                    <Star
+                                      className={`h-5 w-5 ${
+                                        star <=
+                                        (hoveredRating[booking._id] ||
+                                          rating[booking._id])
+                                          ? "fill-yellow-400 text-yellow-400"
+                                          : "text-gray-300"
+                                      }`}
+                                    />
+                                  </button>
+                                ))}
+                              </div>
+                            </div>
+                            <button
+                              className="self-end px-3 py-1 bg-blue-600 text-white rounded-md hover:bg-blue-700 text-sm"
+                              onClick={(e) => {
+                                e.preventDefault();
+                                handleFeedbackSubmit(
+                                  booking.serviceId._id,
+                                  booking.providerId._id,
+                                  parent.userId,
+                                  booking.childId._id,
+                                  booking._id
+                                );
+                              }}
+                            >
+                              Submit Review
+                            </button>
+                          </div>
                         )}
 
-                        <button className="px-4 py-2 border rounded-md hover:bg-gray-50 text-sm">
+                        {/* <button className="h-5 w-5 border rounded-md hover:bg-gray-50 text-sm">
                           Cancel
-                        </button>
+                        </button> */}
                       </>
                     )}
                     {/* <button className="p-2 border rounded-md hover:bg-gray-50">
@@ -237,6 +289,12 @@ export default function Bookings() {
           </div>
         ))}
       </div>
+
+      {/* <FeedbackModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        serviceDetails={serviceDetails}
+      /> */}
     </div>
   );
 }

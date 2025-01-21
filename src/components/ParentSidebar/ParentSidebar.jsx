@@ -48,8 +48,8 @@ const ParentSidebar = () => {
 
     { icon: Calendar, label: "On Going Therapies", path: "/bookings" },
 
-    { icon: Heart, label: "Book Therapies", path: "/services" },
- 
+    { icon: Heart, label: "Book Therapies", path: "/therapies" },
+
     { icon: Star, label: "Feedback", path: "/feedback" },
     {icon: Info, label: "Help & Support", path: "/help" }
   ];
