@@ -1,6 +1,6 @@
 import axios from "axios";
 import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
-import { Circle, CircleDot, Upload, User } from "lucide-react";
+import { Circle, CircleDot, Loader, Upload, User } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
@@ -17,7 +17,9 @@ export default function StaffSelection() {
   const [currentStep, setCurrentStep] = useState(1);
   const [image, setImage] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+
   useEffect(() => {
     const getImage = () => {
       const childImage = sessionStorage.getItem("image");
@@ -38,9 +40,9 @@ export default function StaffSelection() {
 
   const handleImageUpload = (event) => {
     const file = event.target.files[0];
-    setImagePreview(URL.createObjectURL(file));
 
     if (!file) return;
+    setLoading(true);
     const storageRef = ref(storage, `chidlProfiles/${file.name}`);
     const uploadTask = uploadBytesResumable(storageRef, file);
 
@@ -53,11 +55,14 @@ export default function StaffSelection() {
       },
       (error) => {
         console.error(error);
+        setLoading(false);
       },
       async () => {
         const downloadUrl = await getDownloadURL(uploadTask.snapshot.ref);
         setImage(downloadUrl);
         sessionStorage.setItem("image", downloadUrl);
+        setImagePreview(downloadUrl);
+        setLoading(false);
       }
     );
   };
@@ -164,7 +169,9 @@ export default function StaffSelection() {
           <div className="flex flex-col items-center p-6 bg-gradient-to-br from-slate-800 to-slate-900 rounded-xl shadow-lg">
             <div className="relative mb-4">
               <div className="w-20 h-20 rounded-full overflow-hidden bg-slate-700 flex items-center justify-center">
-                {imagePreview ? (
+                {loading ? (
+                  <Loader className="w-8 h-8 text-blue-500 animate-spin" /> // Show spinner
+                ) : imagePreview ? (
                   <img
                     src={imagePreview}
                     alt="Profile Preview"
