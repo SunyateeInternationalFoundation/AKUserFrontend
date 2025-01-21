@@ -158,7 +158,6 @@ const ParentHome = () => {
                 </li>
               </ul>
             </div>
-
       
             <div className="space-y-4">
               <h3 className="font-semibold text-lg">Connect with us</h3>

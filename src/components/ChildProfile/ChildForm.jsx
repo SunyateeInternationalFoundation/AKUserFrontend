@@ -9,9 +9,12 @@ import { BehavioralInfoForm } from "./BehavioralInfoForm";
 import { DocumentUploadForm } from "./DocumentUploadForm";
 import { MedicalInfoForm } from "./MedicalInfoForm";
 import { TherapyHistoryForm } from "./TherapyHistoryForm";
+import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
+import { storage } from "../../firebase";
 export default function StaffSelection() {
   const parent = useSelector((state) => state.user);
   const [currentStep, setCurrentStep] = useState(1);
+  const [image, setImage] = useState(null);
   const navigate = useNavigate();
   const handleNext = () => {
     setCurrentStep(currentStep + 1);
@@ -20,6 +23,27 @@ export default function StaffSelection() {
   const handlePrev = () => {
     setCurrentStep(currentStep - 1);
   };
+
+  const handleImageUpload = (event) =>{
+    const file = event.target.files[0];
+    if(!file) return
+    const storageRef = ref(storage, `chidlProfiles/${file.name}`)
+    const uploadTask = uploadBytesResumable(storageRef, file)
+
+    uploadTask.on("state_changed",
+    (snapshot)=>{
+      const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+      console.log('Upload is ' + progress + '% done');
+    },
+    (error)=>{
+      console.error(error);
+    },
+    async ()=>{
+      const downloadUrl= await getDownloadURL(uploadTask.snapshot.ref)
+      setImage(downloadUrl)
+    }
+    )
+  }
 
   const handleSubmit = async () => {
     const basicInfo = JSON.parse(sessionStorage.getItem("basicInfo"));
@@ -35,6 +59,7 @@ export default function StaffSelection() {
       therapyHistory: { ...therapyHistory },
       admissionGoal: { ...admissionGoal },
       parentId: parent.userId,
+      image: image
     };
     console.log("alldetails,", formData);
     try {
@@ -111,6 +136,8 @@ export default function StaffSelection() {
     }
   };
 
+  console.log("childImage", image)
+
   return (
     <div className="flex p-6 bg-gray-100 h-[750px] mt-23 mx-44">
       <div className="w-1/4 bg-gradient-to-b from-slate-900 to-slate-800 text-white p-6 rounded-xl">
@@ -118,13 +145,21 @@ export default function StaffSelection() {
           <h2 className="text-lg font-semibold mb-4">Children Details</h2>
           <div className="flex items-center gap-3 bg-slate-800/50 p-3 rounded-lg">
             <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-blue-500 rounded-lg flex items-center justify-center overflow-hidden">
-              <img
+            <img
                 className="w-full h-full object-cover"
-                src="https://images8.alphacoders.com/398/thumb-1920-398553.jpg"
-                alt=""
+                src={image || "https://images8.alphacoders.com/398/thumb-1920-398553.jpg"} 
+                alt="Child"
               />
             </div>
-
+            <div>
+              <input
+                type="file"
+                accept="image/*"
+                onChange={handleImageUpload}
+                className="mt-4 text-sm"
+              />
+              <p className="text-xs mt-2 text-gray-400">Upload Child's Picture</p>
+            </div>
             <div>
               {/* <p className="font-medium">Kayathri</p> */}
               <div className="flex items-center gap-1 text-sm text-yellow-400">

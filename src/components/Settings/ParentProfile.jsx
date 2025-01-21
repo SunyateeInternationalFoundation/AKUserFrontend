@@ -2,6 +2,9 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { IoCloudUploadOutline } from "react-icons/io5";
 import { useSelector } from "react-redux";
+import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
+import { storage } from "../../firebase";
+
 const ParentProfile = () => {
   const parent = useSelector((state) => state.user);
   const [userData, setUserData] = useState({
@@ -11,7 +14,12 @@ const ParentProfile = () => {
     address: "",
     city: "",
     pincode: "",
+    image: "",
   });
+  const [isEditing, setIsEditing] = useState(false);
+  const [uploading, setUploading] = useState(false);
+  const [loading, setLoading] = useState(true);
+
   useEffect(() => {
     const fetchParentDetails = async () => {
       try {
@@ -22,14 +30,14 @@ const ParentProfile = () => {
           setUserData(parentDetails.data.data);
         }
       } catch (err) {
-        console.log("Error in fetching parent Details", err);
+        console.log("Error in fetching parent details", err);
+      } finally {
+        setLoading(false);
       }
     };
 
     fetchParentDetails();
-  }, []);
-
-  const [isEditing, setIsEditing] = useState(false);
+  }, [parent.userId]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -40,7 +48,37 @@ const ParentProfile = () => {
   };
 
   const toggleEditMode = () => {
-    setIsEditing(!isEditing);
+    setIsEditing((prev) => !prev);
+  };
+
+  const handleFileUpload = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    const fileRef = ref(storage, `profilePicParents/${parent.userId}/${file.name}`);
+    const uploadTask = uploadBytesResumable(fileRef, file);
+
+    setUploading(true);
+
+    uploadTask.on(
+      "state_changed",
+      (snapshot) => {
+        const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+        console.log("Upload is", progress, "% done");
+      },
+      (error) => {
+        console.error("Upload error:", error);
+        setUploading(false);
+      },
+      async () => {
+        const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
+        setUserData((prevState) => ({
+          ...prevState,
+          image: downloadURL,
+        }));
+        setUploading(false);
+      }
+    );
   };
 
   const handleSubmit = async () => {
@@ -54,9 +92,13 @@ const ParentProfile = () => {
       console.error("Error updating profile:", error);
     }
   };
-  console.log("parentDatails,", userData);
+
+  if (loading) {
+    return <div className="spinner">Loading...</div>; // Replace with a styled spinner/loader
+  }
+
   return (
-    <div className="max-w-screen max-w-screen mx-36 mt-36 p-6 bg-white shadow-md rounded-lg">
+    <div className="max-w-screen mx-36 mt-36 p-6 bg-white shadow-md rounded-lg">
       <h2 className="text-2xl font-semibold mb-1">Parent Profile</h2>
       <p className="text-gray-500 text-sm mb-6">
         Manage your account settings and profile information.
@@ -67,123 +109,57 @@ const ParentProfile = () => {
           Profile Picture
         </label>
         <div className="flex items-center gap-4">
-          <div className="flex items-center gap-4">
-            <img
-              src={
-                userData.profilePicture ||
-                "https://as1.ftcdn.net/v2/jpg/06/54/32/40/1000_F_654324018_2M3RUmpX17hgOOftZEM2dUsCrnh62a6P.jpg"
-              }
-              alt="Profile"
-              className="w-20 h-20 rounded-full object-cover"
-            />
+          <img
+            src={
+              userData.image
+                ? userData.image
+                : "https://as1.ftcdn.net/v2/jpg/06/54/32/40/1000_F_654324018_2M3RUmpX17hgOOftZEM2dUsCrnh62a6P.jpg"
+            }
+            alt="Profile"
+            className="w-20 h-20 rounded-full object-cover"
+          />
+          {isEditing && (
             <div className="flex flex-row gap-2 ml-5">
               <label
                 htmlFor="file-upload"
                 className="flex cursor-pointer bg-[#3f3f46] text-sm text-white px-2 py-1 rounded text-center"
               >
-                <IoCloudUploadOutline className="mr-1 mt-1" />{" "}
-                <span>Upload </span>
+                <IoCloudUploadOutline className="mr-1 mt-1" /> <span>Upload</span>
               </label>
               <input
                 id="file-upload"
                 type="file"
-                // onChange={handleFileUpload}
+                onChange={handleFileUpload}
                 className="hidden"
               />
               <button
-                onClick={() => setUserData({ ...userData, profilePicture: "" })}
+                onClick={() => setUserData({ ...userData, image: "" })}
                 className="bg-gray-100 text-black text-sm px-2 py-1 rounded"
               >
                 Remove
               </button>
             </div>
-          </div>
+          )}
         </div>
-        {/* <p className="text-sm text-gray-500 mt-2">
-            *Image size should be at least 320px big, and less than 500kb.
-            Allowed files: .png and .jpg.
-          </p> */}
       </div>
 
       <div className="grid grid-cols-2 gap-6">
-        <div>
-          <label className="block text-gray-700 text-sm font-bold mb-2">
-            Name
-          </label>
-          <input
-            name="name"
-            value={userData.name}
-            onChange={handleInputChange}
-            className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-gray-300"
-            type="text"
-            disabled={!isEditing}
-          />
-        </div>
-        <div>
-          <label className="block text-gray-700 text-sm font-bold mb-2">
-            Email
-          </label>
-          <input
-            name="email"
-            value={userData.email}
-            onChange={handleInputChange}
-            className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-gray-300"
-            type="email"
-            disabled={!isEditing}
-          />
-        </div>
-        <div>
-          <label className="block text-gray-700 text-sm font-bold mb-2">
-            Phone
-          </label>
-          <input
-            name="phone"
-            value={userData.phone}
-            onChange={handleInputChange}
-            className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-gray-300"
-            type="text"
-            disabled={!isEditing}
-          />
-        </div>
-        <div>
-          <label className="block text-gray-700 text-sm font-bold mb-2">
-            Address
-          </label>
-          <input
-            name="address"
-            value={userData.address}
-            onChange={handleInputChange}
-            className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-gray-300"
-            type="text"
-            disabled={!isEditing}
-          />
-        </div>
-        <div>
-          <label className="block text-gray-700 text-sm font-bold mb-2">
-            City
-          </label>
-          <input
-            name="city"
-            value={userData.city}
-            onChange={handleInputChange}
-            className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-gray-300"
-            type="text"
-            disabled={!isEditing}
-          />
-        </div>
-        <div>
-          <label className="block text-gray-700 text-sm font-bold mb-2">
-            Pincode
-          </label>
-          <input
-            name="pincode"
-            value={userData.pincode}
-            onChange={handleInputChange}
-            className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-gray-300"
-            type="text"
-            disabled={!isEditing}
-          />
-        </div>
+        {/* Render form fields */}
+        {["name", "email", "phone", "address", "city", "pincode"].map((field) => (
+          <div key={field}>
+            <label className="block text-gray-700 text-sm font-bold mb-2">
+              {field.charAt(0).toUpperCase() + field.slice(1)}
+            </label>
+            <input
+              name={field}
+              value={userData[field]}
+              onChange={handleInputChange}
+              className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-gray-300"
+              type={field === "email" ? "email" : "text"}
+              disabled={!isEditing}
+            />
+          </div>
+        ))}
       </div>
       <div className="mt-6 flex justify-end">
         {isEditing ? (
