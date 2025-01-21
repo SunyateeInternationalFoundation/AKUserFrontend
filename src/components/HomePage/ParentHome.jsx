@@ -10,6 +10,7 @@ import Feedback from "../Feedback/Feedback";
 import Bookings from "../MyBookings/Bookings";
 import Services from "../Services/Services";
 import ParentProfile from "../Settings/ParentProfile";
+import HelpSupport from "../HelpSupport/HelpSupport";
 const ParentHome = () => {
   return (
     <div className="flex flex-col min-h-screen bg-gray-50">
@@ -31,6 +32,10 @@ const ParentHome = () => {
             <Route
               path="/settings/parent-profile"
               element={<ParentProfile />}
+            />
+            <Route
+            path="/help"
+            element={<HelpSupport />}
             />
           </Routes>
           <Outlet />
