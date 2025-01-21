@@ -32,8 +32,10 @@ export function BasicInfoForm({ onNext }) {
       [name]: value,
     }));
   };
+
   const basicInfo = JSON.parse(sessionStorage.getItem("basicInfo"));
-  console.log("basicInfo", basicInfo);
+  // setFormData(basicInfo);
+  // console.log("basicInfo", basicInfo);
   return (
     <div className="w-full h-full max-w-4xl mx-auto p-6 bg-white rounded-lg shadow overflow-y-auto">
       <h2 className="text-2xl font-bold mb-6">Basic Information</h2>

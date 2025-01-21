@@ -1,17 +1,22 @@
 import axios from "axios";
-import { Circle, CircleDot } from "lucide-react";
-import { useState } from "react";
+import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
+import { Circle, CircleDot, Upload, User } from "lucide-react";
+import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { storage } from "../../firebase";
 import { AdmissionGoalsForm } from "./AdmissionGoalsForm";
 import { BasicInfoForm } from "./BasicInfoForm";
 import { BehavioralInfoForm } from "./BehavioralInfoForm";
 import { DocumentUploadForm } from "./DocumentUploadForm";
 import { MedicalInfoForm } from "./MedicalInfoForm";
 import { TherapyHistoryForm } from "./TherapyHistoryForm";
+
 export default function StaffSelection() {
   const parent = useSelector((state) => state.user);
   const [currentStep, setCurrentStep] = useState(1);
+  const [image, setImage] = useState(null);
+  const [imagePreview, setImagePreview] = useState(null);
   const navigate = useNavigate();
   const handleNext = () => {
     setCurrentStep(currentStep + 1);
@@ -19,6 +24,30 @@ export default function StaffSelection() {
 
   const handlePrev = () => {
     setCurrentStep(currentStep - 1);
+  };
+
+  const handleImageUpload = (event) => {
+    const file = event.target.files[0];
+    setImagePreview(URL.createObjectURL(file));
+    if (!file) return;
+    const storageRef = ref(storage, `chidlProfiles/${file.name}`);
+    const uploadTask = uploadBytesResumable(storageRef, file);
+
+    uploadTask.on(
+      "state_changed",
+      (snapshot) => {
+        const progress =
+          (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+        console.log("Upload is " + progress + "% done");
+      },
+      (error) => {
+        console.error(error);
+      },
+      async () => {
+        const downloadUrl = await getDownloadURL(uploadTask.snapshot.ref);
+        setImage(downloadUrl);
+      }
+    );
   };
 
   const handleSubmit = async () => {
@@ -35,6 +64,7 @@ export default function StaffSelection() {
       therapyHistory: { ...therapyHistory },
       admissionGoal: { ...admissionGoal },
       parentId: parent.userId,
+      image: image,
     };
     console.log("alldetails,", formData);
     try {
@@ -111,27 +141,44 @@ export default function StaffSelection() {
     }
   };
 
+  console.log("childImage", image);
+
   return (
     <div className="flex p-6 bg-gray-100 h-[750px] mt-23 mx-44">
       <div className="w-1/4 bg-gradient-to-b from-slate-900 to-slate-800 text-white p-6 rounded-xl">
-        <div className="mb-8">
+        <div className="mb-3">
           <h2 className="text-lg font-semibold mb-4">Children Details</h2>
-          <div className="flex items-center gap-3 bg-slate-800/50 p-3 rounded-lg">
-            <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-blue-500 rounded-lg flex items-center justify-center overflow-hidden">
-              <img
-                className="w-full h-full object-cover"
-                src="https://images8.alphacoders.com/398/thumb-1920-398553.jpg"
-                alt=""
+
+          <div className="flex flex-col items-center p-6 bg-gradient-to-br from-slate-800 to-slate-900 rounded-xl shadow-lg">
+            <div className="relative mb-4">
+              <div className="w-20 h-20 rounded-full overflow-hidden bg-slate-700 flex items-center justify-center">
+                {imagePreview ? (
+                  <img
+                    src={imagePreview || "/placeholder.svg"}
+                    alt="Profile Preview"
+                    className="w-full h-full object-cover"
+                  />
+                ) : (
+                  <User className="w-36 h-36 text-slate-400" />
+                )}
+              </div>
+              <label
+                htmlFor="profile-upload"
+                className="absolute bottom-0 right-0 bg-blue-500 hover:bg-blue-600 text-white p-2 rounded-full cursor-pointer transition-colors duration-200"
+              >
+                <Upload className="w-4 h-4" />
+              </label>
+              <input
+                id="profile-upload"
+                type="file"
+                accept="image/*"
+                onChange={handleImageUpload}
+                className="hidden"
               />
             </div>
-
-            <div>
-              {/* <p className="font-medium">Kayathri</p> */}
-              <div className="flex items-center gap-1 text-sm text-yellow-400">
-                {/* <span>★</span>
-                <span className="text-gray-300">4.9 (255 reviews)</span> */}
-              </div>
-            </div>
+            <h2 className="text-sm font-semibold text-white">
+              Upload Child Picture
+            </h2>
           </div>
         </div>
 
