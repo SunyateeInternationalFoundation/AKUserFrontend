@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export function TherapyHistoryForm({ onNext, onPrev }) {
   const [formData, setFormData] = useState({
@@ -13,6 +13,15 @@ export function TherapyHistoryForm({ onNext, onPrev }) {
     strengthsAndInterests: "",
   });
 
+  useEffect(() => {
+    const getDetails = () => {
+      const therapyHistory = JSON.parse(
+        sessionStorage.getItem("therapyHistory")
+      );
+      setFormData(therapyHistory);
+    };
+    getDetails();
+  }, []);
   const handleChange = (e) => {
     const { name, value, type } = e.target;
     const newValue = type === "checkbox" ? e.target.checked : value;
@@ -25,8 +34,8 @@ export function TherapyHistoryForm({ onNext, onPrev }) {
     sessionStorage.setItem("therapyHistory", JSON.stringify(formData));
     onNext();
   };
-  const therapyHistory = JSON.parse(sessionStorage.getItem("therapyHistory"));
-  console.log("therapyHistory", therapyHistory);
+
+  // console.log("therapyHistory", therapyHistory);
   return (
     <div className="w-full h-full max-w-4xl mx-auto p-6 bg-white rounded-lg shadow overflow-y-auto">
       <h2 className="text-2xl font-bold mb-6">
@@ -45,7 +54,7 @@ export function TherapyHistoryForm({ onNext, onPrev }) {
               type="text"
               id="schoolName"
               name="schoolName"
-              value={formData?.schoolName || therapyHistory?.schoolName}
+              value={formData?.schoolName}
               onChange={handleChange}
               className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
@@ -62,7 +71,7 @@ export function TherapyHistoryForm({ onNext, onPrev }) {
               type="text"
               id="gradeLevel"
               name="gradeLevel"
-              value={formData?.gradeLevel || therapyHistory?.gradeLevel}
+              value={formData?.gradeLevel}
               onChange={handleChange}
               className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
@@ -76,9 +85,7 @@ export function TherapyHistoryForm({ onNext, onPrev }) {
               <input
                 type="checkbox"
                 name="speechTherapy"
-                checked={
-                  formData?.speechTherapy || therapyHistory?.speechTherapy
-                }
+                checked={formData?.speechTherapy}
                 onChange={handleChange}
                 className="form-checkbox h-5 w-5 text-blue-600"
               />
@@ -92,10 +99,7 @@ export function TherapyHistoryForm({ onNext, onPrev }) {
               <input
                 type="checkbox"
                 name="occupationalTherapy"
-                checked={
-                  formData?.occupationalTherapy ||
-                  therapyHistory?.occupationalTherapy
-                }
+                checked={formData?.occupationalTherapy}
                 onChange={handleChange}
                 className="form-checkbox h-5 w-5 text-blue-600"
               />
@@ -109,7 +113,7 @@ export function TherapyHistoryForm({ onNext, onPrev }) {
               <input
                 type="checkbox"
                 name="aba"
-                checked={formData?.aba || therapyHistory?.aba}
+                checked={formData?.aba}
                 onChange={handleChange}
                 className="form-checkbox h-5 w-5 text-blue-600"
               />
@@ -129,7 +133,7 @@ export function TherapyHistoryForm({ onNext, onPrev }) {
               type="text"
               id="otherTherapy"
               name="otherTherapy"
-              value={formData?.otherTherapy || therapyHistory?.otherTherapy}
+              value={formData?.otherTherapy}
               onChange={handleChange}
               className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
@@ -146,7 +150,7 @@ export function TherapyHistoryForm({ onNext, onPrev }) {
           <textarea
             id="goalsAchieved"
             name="goalsAchieved"
-            value={formData?.goalsAchieved || therapyHistory?.goalsAchieved}
+            value={formData?.goalsAchieved}
             onChange={handleChange}
             className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             rows={3}
@@ -163,9 +167,7 @@ export function TherapyHistoryForm({ onNext, onPrev }) {
           <textarea
             id="challengesObserved"
             name="challengesObserved"
-            value={
-              formData?.challengesObserved || therapyHistory?.challengesObserved
-            }
+            value={formData?.challengesObserved}
             onChange={handleChange}
             className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             rows={3}
@@ -182,10 +184,7 @@ export function TherapyHistoryForm({ onNext, onPrev }) {
           <textarea
             id="strengthsAndInterests"
             name="strengthsAndInterests"
-            value={
-              formData?.strengthsAndInterests ||
-              therapyHistory?.strengthsAndInterests
-            }
+            value={formData?.strengthsAndInterests}
             onChange={handleChange}
             className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             rows={3}
