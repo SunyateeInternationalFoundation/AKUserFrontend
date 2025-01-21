@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export function AdmissionGoalsForm({ onNext, onPrev }) {
   const [formData, setFormData] = useState({
@@ -10,10 +10,14 @@ export function AdmissionGoalsForm({ onNext, onPrev }) {
     sensoryIntegrationGoal: "",
     preferredTherapyModalities: [],
     parentGuardianGoals: "",
-    emergencyContactName: "",
-    emergencyContactRelationship: "",
   });
-
+  useEffect(() => {
+    const getDetails = () => {
+      const admissionInfo = JSON.parse(sessionStorage.getItem("admissionGoal"));
+      setFormData(admissionInfo);
+    };
+    getDetails();
+  }, []);
   const handleChange = (e) => {
     const { name, value, type } = e.target;
     if (type === "checkbox") {
@@ -35,8 +39,8 @@ export function AdmissionGoalsForm({ onNext, onPrev }) {
     sessionStorage.setItem("admissionGoal", JSON.stringify(formData));
     onNext();
   };
-  const admissionInfo = JSON.parse(sessionStorage.getItem("admissionGoal"));
-  console.log("admissionDetails", admissionInfo);
+
+  // console.log("admissionDetails", admissionInfo);
   return (
     <div className="w-full h-full max-w-4xl mx-auto p-6 bg-white rounded-lg shadow overflow-y-auto">
       <h2 className="text-2xl font-bold mb-6">Admission and Therapy Goals</h2>
@@ -51,9 +55,7 @@ export function AdmissionGoalsForm({ onNext, onPrev }) {
           <textarea
             id="reasonForAdmission"
             name="reasonForAdmission"
-            value={
-              formData?.reasonForAdmission || admissionInfo?.reasonForAdmission
-            }
+            value={formData?.reasonForAdmission}
             onChange={handleChange}
             className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             rows={2}
@@ -74,10 +76,7 @@ export function AdmissionGoalsForm({ onNext, onPrev }) {
                 type="text"
                 id="communicationGoal"
                 name="communicationGoal"
-                value={
-                  formData?.communicationGoal ||
-                  admissionInfo?.communicationGoal
-                }
+                value={formData?.communicationGoal}
                 onChange={handleChange}
                 className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
@@ -93,10 +92,7 @@ export function AdmissionGoalsForm({ onNext, onPrev }) {
                 type="text"
                 id="behavioralManagementGoal"
                 name="behavioralManagementGoal"
-                value={
-                  formData?.behavioralManagementGoal ||
-                  admissionInfo?.behavioralManagementGoal
-                }
+                value={formData?.behavioralManagementGoal}
                 onChange={handleChange}
                 className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
@@ -112,10 +108,7 @@ export function AdmissionGoalsForm({ onNext, onPrev }) {
                 type="text"
                 id="academicSupportGoal"
                 name="academicSupportGoal"
-                value={
-                  formData?.academicSupportGoal ||
-                  admissionInfo?.academicSupportGoal
-                }
+                value={formData?.academicSupportGoal}
                 onChange={handleChange}
                 className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
@@ -131,9 +124,7 @@ export function AdmissionGoalsForm({ onNext, onPrev }) {
                 type="text"
                 id="socialSkillsGoal"
                 name="socialSkillsGoal"
-                value={
-                  formData?.socialSkillsGoal || admissionInfo?.socialSkillsGoal
-                }
+                value={formData?.socialSkillsGoal}
                 onChange={handleChange}
                 className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
@@ -149,10 +140,7 @@ export function AdmissionGoalsForm({ onNext, onPrev }) {
                 type="text"
                 id="sensoryIntegrationGoal"
                 name="sensoryIntegrationGoal"
-                value={
-                  formData?.sensoryIntegrationGoal ||
-                  admissionInfo?.sensoryIntegrationGoal
-                }
+                value={formData?.sensoryIntegrationGoal}
                 onChange={handleChange}
                 className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
@@ -178,14 +166,9 @@ export function AdmissionGoalsForm({ onNext, onPrev }) {
                     type="checkbox"
                     name="preferredTherapyModalities"
                     value={therapy}
-                    checked={
-                      (formData.preferredTherapyModalities || []).includes(
-                        therapy
-                      ) ||
-                      (
-                        admissionInfo?.preferredTherapyModalities || []
-                      ).includes(therapy)
-                    }
+                    checked={(
+                      formData.preferredTherapyModalities || []
+                    ).includes(therapy)}
                     onChange={handleChange}
                     className="form-checkbox h-5 w-5 text-blue-600"
                   />
@@ -208,10 +191,7 @@ export function AdmissionGoalsForm({ onNext, onPrev }) {
           <textarea
             id="parentGuardianGoals"
             name="parentGuardianGoals"
-            value={
-              formData?.parentGuardianGoals ||
-              admissionInfo?.parentGuardianGoals
-            }
+            value={formData?.parentGuardianGoals}
             onChange={handleChange}
             className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             rows={2}
