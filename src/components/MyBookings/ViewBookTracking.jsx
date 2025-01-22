@@ -17,18 +17,17 @@ const ViewBookTracking = () => {
         );
         console.log(res.data.data);
         if (res.data.success) {
-          const totalSessions = res.data.data.serviceId.sessions; // Get total sessions (5 in this case)
+          const totalSessions = res.data.data.serviceId.sessions; 
 
-          // Dynamically create an array of sessions based on the totalSessions value
           const sessionArray = [];
           for (let i = 1; i <= totalSessions; i++) {
             sessionArray.push({
               session: i,
-              status: i === 1 ? "Completed" : i === 2 ? "On Going" : "Upcoming", // Adjust this based on actual status
+              status: i === 1 ? "Completed" : i === 2 ? "On Going" : "Upcoming", status
             });
           }
 
-          setSessions(sessionArray); // Set the dynamically generated sessions
+          setSessions(sessionArray); 
         }
       } catch (err) {
         console.log("Error in getting sessions:", err);
