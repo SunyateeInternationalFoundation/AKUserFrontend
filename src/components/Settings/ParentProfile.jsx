@@ -1,5 +1,6 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
+import { Loader, User } from "lucide-react";
 import { IoCloudUploadOutline } from "react-icons/io5";
 import { useSelector } from "react-redux";
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
@@ -104,44 +105,44 @@ const ParentProfile = () => {
         Manage your account settings and profile information.
       </p>
 
-      <div className="mb-4">
-        <label className="block text-gray-700 text-sm font-bold mb-2">
-          Profile Picture
-        </label>
-        <div className="flex items-center gap-4">
-          <img
-            src={
-              userData.image
-                ? userData.image
-                : "https://as1.ftcdn.net/v2/jpg/06/54/32/40/1000_F_654324018_2M3RUmpX17hgOOftZEM2dUsCrnh62a6P.jpg"
-            }
-            alt="Profile"
-            className="w-20 h-20 rounded-full object-cover"
-          />
-          {isEditing && (
-            <div className="flex flex-row gap-2 ml-5">
-              <label
-                htmlFor="file-upload"
-                className="flex cursor-pointer bg-[#3f3f46] text-sm text-white px-2 py-1 rounded text-center"
-              >
-                <IoCloudUploadOutline className="mr-1 mt-1" /> <span>Upload</span>
-              </label>
-              <input
-                id="file-upload"
-                type="file"
-                onChange={handleFileUpload}
-                className="hidden"
-              />
-              <button
-                onClick={() => setUserData({ ...userData, image: "" })}
-                className="bg-gray-100 text-black text-sm px-2 py-1 rounded"
-              >
-                Remove
-              </button>
-            </div>
-          )}
-        </div>
-      </div>
+      <div className="relative mb-4">
+  <div className="w-20 h-20 rounded-full overflow-hidden bg-slate-700 flex items-center justify-center">
+    {uploading ? (
+      <Loader className="w-8 h-8 text-blue-500 animate-spin" /> 
+    ) : userData.image ? (
+      <img
+        src={userData.image}
+        alt="Profile Preview"
+        className="w-full h-full object-cover"
+      />
+    ) : (
+      <User className="w-8 h-8 text-slate-400" /> 
+    )}
+  </div>
+  {isEditing && (
+    <div className="flex flex-row gap-2 mt-2">
+      <label
+        htmlFor="file-upload"
+        className="flex cursor-pointer bg-[#3f3f46] text-sm text-white px-2 py-1 rounded"
+      >
+        <IoCloudUploadOutline className="mr-1 mt-1" /> <span>Upload</span>
+      </label>
+      <input
+        id="file-upload"
+        type="file"
+        onChange={handleFileUpload}
+        className="hidden"
+      />
+      <button
+        onClick={() => setUserData({ ...userData, image: "" })}
+        className="bg-gray-100 text-black text-sm px-2 py-1 rounded"
+      >
+        Remove
+      </button>
+    </div>
+  )}
+</div>
+
 
       <div className="grid grid-cols-2 gap-6">
         {/* Render form fields */}

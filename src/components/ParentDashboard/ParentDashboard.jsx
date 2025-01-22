@@ -1,10 +1,22 @@
 import axios from "axios";
+import { useSpring, animated } from "@react-spring/web";
 import { Package2, Wallet } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 function StatsCard({ icon, label, value, change, prefix = "₹" }) {
   const isPositive = change > 0;
-
+  const { number } = useSpring({
+    from: { number: 0  },
+    number: typeof value === "number" ? value : 0,
+    delay: 400,
+    config: {tension: 20, friction: 14, precision: 10},
+  });
+  const { changeNumber } = useSpring({
+    from: { changeNumber: 0 },
+    changeNumber: change,
+    delay: 400,
+    config: { tension: 20, friction: 14 },
+  });
   return (
     <div className="rounded-xl border bg-white p-4 flex items-start justify-between">
       <div className="space-y-1.5">
@@ -13,7 +25,8 @@ function StatsCard({ icon, label, value, change, prefix = "₹" }) {
           <span className="text-sm text-gray-500">{label}</span>
         </div>
         <p className="text-2xl font-semibold">
-          {typeof value === "number" ? `${prefix}${value}` : value}
+          {prefix}
+          <animated.span>{number.to((n) => Math.floor(n))}</animated.span>
         </p>
       </div>
       <div
@@ -21,8 +34,9 @@ function StatsCard({ icon, label, value, change, prefix = "₹" }) {
           isPositive ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700"
         }`}
       >
-        {isPositive ? "+" : ""}
-        {change}%
+        <animated.span>
+          {changeNumber.to((n) => `${isPositive ? "+" : ""}${Math.floor(n)}%`)}
+        </animated.span>
       </div>
     </div>
   );
