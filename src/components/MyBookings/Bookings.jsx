@@ -2,9 +2,11 @@ import axios from "axios";
 import { Calendar, Filter, Star } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 export default function Bookings() {
-  const [bookings, setBookings] = useState([]);
   const parent = useSelector((state) => state.user);
+  const navigate = useNavigate();
+  const [bookings, setBookings] = useState([]);
   const [rating, setRating] = useState({});
   const [hoveredRating, setHoveredRating] = useState({});
   const [reviews, setReviews] = useState({});
@@ -96,7 +98,13 @@ export default function Bookings() {
 
       <div className="space-y-6  h-[700px] overflow-y-auto">
         {bookings.map((booking) => (
-          <div key={booking?._id} className="bg-white p-6 rounded-lg ">
+          <div
+            key={booking?._id}
+            className="bg-white p-6 rounded-lg cursor-pointer "
+            onClick={() => {
+              navigate(`${booking?._id}`);
+            }}
+          >
             <div className="flex gap-6">
               <img
                 src={
@@ -208,7 +216,10 @@ export default function Bookings() {
                     {booking?.status === "On Going" && (
                       <>
                         {booking.accepted && (
-                          <div className="flex flex-col">
+                          <div
+                            className="flex flex-col"
+                            onClick={(e) => e.stopPropagation()}
+                          >
                             <div className="space-y-2 px-6">
                               <label className="text-sm font-medium">
                                 Write your Review
@@ -258,8 +269,7 @@ export default function Bookings() {
                             </div>
                             <button
                               className="self-end px-3 py-1 bg-blue-600 text-white rounded-md hover:bg-blue-700 text-sm"
-                              onClick={(e) => {
-                                e.preventDefault();
+                              onClick={() => {
                                 handleFeedbackSubmit(
                                   booking.serviceId._id,
                                   booking.providerId._id,

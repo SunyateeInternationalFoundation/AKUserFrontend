@@ -91,6 +91,7 @@ export const FreeTrialModal = ({ isOpen, onClose, service }) => {
   };
 
   const handleSubmit = async (e) => {
+    e.preventDefault();
     try {
       const response = await axios.get(
         `${import.meta.env.VITE_WEBSITE}/payment`,
@@ -131,12 +132,34 @@ export const FreeTrialModal = ({ isOpen, onClose, service }) => {
       };
       const paymentObject = new window.Razorpay(options);
       paymentObject.open();
-      e.preventDefault();
 
       paymentObject.on("payment.failed", function (response) {
         console.log(response);
         alert("Something went wrong");
       });
+
+      const res = await axios.post(
+        `${import.meta.env.VITE_WEBSITE}/booking-trail`,
+        {
+          serviceId: service._id,
+          child: selectedChild,
+          provider: selectedProvider,
+          date: selectedDate,
+          time: selectedTime,
+          parentId: parent.userId,
+        }
+      );
+      if (res.data.success) {
+        navigate("/bookings");
+      }
+      console.log("Free Trial Booked", {
+        service,
+        child: selectedChild,
+        provider: selectedProvider,
+        date: selectedDate,
+        time: selectedTime,
+      });
+      onClose();
     } catch (err) {
       console.log("Error In Payment Section:", err);
     }
@@ -192,8 +215,7 @@ export const FreeTrialModal = ({ isOpen, onClose, service }) => {
                       "https://media.istockphoto.com/id/1279844456/photo/young-indian-business-woman-entrepreneur-looking-at-camera-in-the-office.jpg?s=2048x2048&w=is&k=20&c=HFSZlaDFEoUKkGgTVduvYumtJoX2vev6FkGd-jscLUo="
                     }
                     alt={child?.basicInfo?.childFullName}
-                    width={50}
-                    className="rounded-full mr-4"
+                    className="rounded-full mr-4 w-24 h-24"
                   />
                   <span>{child?.basicInfo?.childFullName}</span>
                 </div>
@@ -224,8 +246,7 @@ export const FreeTrialModal = ({ isOpen, onClose, service }) => {
                       "https://media.istockphoto.com/id/1279844456/photo/young-indian-business-woman-entrepreneur-looking-at-camera-in-the-office.jpg?s=2048x2048&w=is&k=20&c=HFSZlaDFEoUKkGgTVduvYumtJoX2vev6FkGd-jscLUo="
                     }
                     alt={provider.name}
-                    width={50}
-                    className="rounded-full mr-4"
+                    className="rounded-full mr-4  w-24 h-24"
                   />
                   <span>{provider.name}</span>
                 </div>
@@ -302,32 +323,34 @@ export const FreeTrialModal = ({ isOpen, onClose, service }) => {
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div className="bg-white rounded-lg p-6 w-full max-w-md">
-        <div className="flex justify-between items-center mb-4">
-          <h3 className="text-xl font-semibold">
-            Book Free Trial - {service?.name}
-          </h3>
-          <button
-            onClick={onClose}
-            className="text-gray-500 hover:text-gray-700"
-          >
-            <svg
-              className="w-6 h-6"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-              xmlns="http://www.w3.org/2000/svg"
+      <div className="bg-white flex flex-col justify-between rounded-lg p-6 w-[600px] h-[700px]">
+        <div>
+          <div className="flex justify-between items-center mb-4">
+            <h3 className="text-xl font-semibold">
+              Book Free Trial - {service?.name}
+            </h3>
+            <button
+              onClick={onClose}
+              className="text-gray-500 hover:text-gray-700"
             >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M6 18L18 6M6 6l12 12"
-              />
-            </svg>
-          </button>
+              <svg
+                className="w-6 h-6"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M6 18L18 6M6 6l12 12"
+                />
+              </svg>
+            </button>
+          </div>
+          <div className="mt-4">{renderStep()}</div>
         </div>
-        <div className="mt-4">{renderStep()}</div>
         <div className="flex justify-between mt-16">
           {step > 0 && (
             <button

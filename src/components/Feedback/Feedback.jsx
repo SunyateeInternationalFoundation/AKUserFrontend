@@ -159,25 +159,24 @@
 // };
 
 // export default Feedback;
-import axios from "axios";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 const Feedback = () => {
   const [reviews, setReviews] = useState([]);
   const [sortBy, setSortBy] = useState("helpful");
 
-  useEffect(() => {
-    const fetchReviews = async () => {
-      try {
-        const response = await axios.get("http://localhost:5000/reviews");
-        setReviews(response.data);
-      } catch (error) {
-        console.error("Error fetching reviews:", error);
-      }
-    };
+  // useEffect(() => {
+  //   const fetchReviews = async () => {
+  //     try {
+  //       const response = await axios.get("http://localhost:5000/reviews");
+  //       setReviews(response.data);
+  //     } catch (error) {
+  //       console.error("Error fetching reviews:", error);
+  //     }
+  //   };
 
-    fetchReviews();
-  }, []);
+  //   fetchReviews();
+  // }, []);
 
   return (
     <div className="flex-1 p-8">
