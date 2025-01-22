@@ -76,7 +76,7 @@ export default function Bookings() {
 
   console.log("bookinlist", bookings);
   return (
-    <div className="p-8 bg-gray-50 min-h-screen">
+    <div className="p-8 bg-gray-50 max-h-screen">
       <div className="flex justify-between items-center mb-8">
         <h1 className="text-2xl font-semibold">Booking List</h1>
         <div className="flex items-center gap-4">
