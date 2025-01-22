@@ -3,12 +3,12 @@ import {
   Calendar,
   ChevronDown,
   Heart,
+  Info,
   LayoutDashboard,
   LogOut,
   Settings,
   Star,
   User,
-  Info
 } from "lucide-react";
 
 import { useEffect, useState } from "react";
@@ -51,7 +51,7 @@ const ParentSidebar = () => {
     { icon: Heart, label: "Book Therapies", path: "/therapies" },
 
     { icon: Star, label: "Feedback", path: "/feedback" },
-    {icon: Info, label: "Help & Support", path: "/help" }
+    { icon: Info, label: "Help & Support", path: "/help" },
   ];
 
   const settingsSubItems = [

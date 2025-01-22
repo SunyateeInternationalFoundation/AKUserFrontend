@@ -1,22 +1,34 @@
 import React from "react";
-import { Outlet, Route, Routes } from "react-router-dom";
+import { Outlet, Route, Routes, matchPath } from "react-router-dom";
 import ParentDashboard from "../ParentDashboard/ParentDashboard";
 import ParentSidebar from "../ParentSidebar/ParentSidebar";
 
+import { useLocation } from "react-router-dom";
 import ChildDetailsPage from "../ChildProfile/ChildDetailsPage";
 import StaffSelection from "../ChildProfile/ChildForm";
 import ChildProfile from "../ChildProfile/ChildProfile";
 import Feedback from "../Feedback/Feedback";
+import HelpSupport from "../HelpSupport/HelpSupport";
 import Bookings from "../MyBookings/Bookings";
+import ViewBookTracking from "../MyBookings/ViewBookTracking";
 import Services from "../Services/Services";
 import ParentProfile from "../Settings/ParentProfile";
-import HelpSupport from "../HelpSupport/HelpSupport";
 const ParentHome = () => {
+  const location = useLocation();
+  const match = ["/bookings/:id"];
+
+  const noSideBarPagesList = match.find((path) =>
+    matchPath({ path }, location.pathname)
+  );
   return (
     <div className="flex flex-col min-h-screen bg-gray-50">
       {" "}
       <div className="flex">
-        <ParentSidebar />
+        {!noSideBarPagesList && (
+          <aside className="h-screen sticky top-0">
+            <ParentSidebar />
+          </aside>
+        )}
         <main className="flex-1 overflow-y-auto">
           <Routes>
             <Route path="/dashboard" element={<ParentDashboard />} />
@@ -29,14 +41,12 @@ const ParentHome = () => {
             />
             <Route path="/child-details/:id" element={<ChildDetailsPage />} />
             <Route path="/bookings" element={<Bookings />} />
+            <Route path="/bookings/:id" element={<ViewBookTracking />} />
             <Route
               path="/settings/parent-profile"
               element={<ParentProfile />}
             />
-            <Route
-            path="/help"
-            element={<HelpSupport />}
-            />
+            <Route path="/help" element={<HelpSupport />} />
           </Routes>
           <Outlet />
         </main>
