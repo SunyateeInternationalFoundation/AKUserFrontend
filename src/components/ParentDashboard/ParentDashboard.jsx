@@ -8,13 +8,13 @@ function StatsCard({ icon, label, value, change, prefix = "₹" }) {
   const { number } = useSpring({
     from: { number: 0  },
     number: typeof value === "number" ? value : 0,
-    delay: 400,
+    delay: 100,
     config: {tension: 20, friction: 14, precision: 10},
   });
   const { changeNumber } = useSpring({
     from: { changeNumber: 0 },
     changeNumber: change,
-    delay: 400,
+    delay: 100,
     config: { tension: 20, friction: 14 },
   });
   return (

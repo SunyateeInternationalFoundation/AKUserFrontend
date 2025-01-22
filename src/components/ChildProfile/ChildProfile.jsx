@@ -1,58 +1,36 @@
-import axios from "axios";
-import { Calendar, Phone, PlusCircle, User2 } from "lucide-react";
-import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
-// const childProfiles = [
-//   {
-//     image:
-//       "https://img.freepik.com/free-psd/young-child-isolated_23-2151196479.jpg?t=st=1736760894~exp=1736764494~hmac=e09b665f6cb39139b252d7500cd4ce9f933536e84f3bdd4e0981bf31291bae18&w=826",
-//     name: "Sarah Johnson",
-//     service: "Autism Therapy",
-//     age: 8,
-//     gender: "Female",
-//     phoneNumber: "1234567890",
-//     dateOfBirth: "2015-05-15",
-//     parentName: "Michael Johnson",
-//   },
-//   {
-//     image:
-//       "https://img.freepik.com/free-psd/young-child-isolated_23-2151196479.jpg?t=st=1736760894~exp=1736764494~hmac=e09b665f6cb39139b252d7500cd4ce9f933536e84f3bdd4e0981bf31291bae18&w=826",
-//     name: "James Wilson",
-//     service: "Speech Therapy",
-//     age: 10,
-//     gender: "Male",
-//     phoneNumber: "9876543210",
-//     dateOfBirth: "2013-08-22",
-//     parentName: "Emma Wilson",
-//   },
-// ];
+import axios from "axios"
+import { Calendar, Phone, PlusCircle, User2 } from "lucide-react"
+import React, { useEffect, useState } from "react"
+import { useSelector } from "react-redux"
+import { useNavigate } from "react-router-dom"
+import { useTrail, animated } from "@react-spring/web"
 
-export default function ChildProfile() {
-  const navigate = useNavigate();
-  const parent = useSelector((state) => state.user);
-  const [childProfiles, setChildProfiles] = useState([]);
+const ChildProfile = ()=> {
+  const navigate = useNavigate()
+  const parent = useSelector((state) => state.user)
+  const [childProfiles, setChildProfiles] = useState([])
 
   useEffect(() => {
     async function fetchingChildren() {
       try {
-        axios
-          .get(`${import.meta.env.VITE_WEBSITE}/get-children/${parent.userId}`)
-          .then((response) => {
-            console.log("res>>><<<<<", response);
-            setChildProfiles(response.data.data);
-          })
-          .catch((error) => {
-            console.error("Error fetching children:", error);
-          });
+        const response = await axios.get(`${import.meta.env.VITE_WEBSITE}/get-children/${parent.userId}`)
+        console.log("res>>><<<<<", response)
+        setChildProfiles(response.data.data)
       } catch (err) {
-        console.log("Error in fetching childrens", err);
+        console.error("Error in fetching children", err)
       }
     }
-    fetchingChildren();
-  }, [parent.userId]);
+    fetchingChildren()
+  }, [parent.userId])
+
+  const trail = useTrail(childProfiles.length, {
+    from: { opacity: 0, transform: "translate3d(0, 40px, 0)" },
+    to: { opacity: 1, transform: "translate3d(0, 0, 0)" },
+    delay: 200,
+  })
+
   return (
-    <div className="bg-gray-50 min-h-screen p-4 sm:p-6 md:p-8">
+    <div className="bg-gray-50 max-h-screen p-4 sm:p-6 md:p-8">
       <div className="flex justify-between items-center">
         <h1 className="text-3xl font-bold text-gray-800">Child Profile</h1>
         <div className="flex items-center gap-4">
@@ -75,92 +53,89 @@ export default function ChildProfile() {
       <hr />
       <div className="max-w-7xl mx-auto mt-10">
         <div className="space-y-4">
-          {childProfiles.map((profile, index) => (
-            <div key={index} className="bg-white rounded-lg shadow-sm border">
-              <div className="p-6 flex flex-col sm:flex-row gap-6">
-                <div className="relative w-full sm:w-48 h-48">
-                  <img
-                    src={
-                      profile.image ||
-                      "https://cdn.create.vista.com/api/media/medium/674346484/stock-photo-pretty-cute-indian-girl-child-smiling-looking-camera-green-nature?token="
-                    }
-                    alt={profile?.basicInfo?.childFullName}
-                    className="w-full h-full object-cover rounded-lg"
-                  />
-                </div>
-
-                <div className="flex-1">
-                  <div className="flex flex-col sm:flex-row justify-between mb-4">
-                    <div className="flex flex-col sm:flex-row justify-center items-center text-center sm:text-left space-x-5">
-                      <h2 className="text-xl font-semibold mb-2">
-                        {profile?.basicInfo?.childFullName}
-                      </h2>
-                      {/* <span className="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm text-center">
-                        {profile.service}
-                      </span> */}
-                    </div>
-                    <div className="mt-4 sm:mt-0">
-                      <button className="w-16 px-2 py-1 text-sm bg-[#fee2e2] text-[#9d174d] rounded-md mr-5">
-                        Update
-                      </button>
-                      <button
-                        className="px-2 py-1 text-sm bg-pink-100 text-pink-700 rounded-md"
-                        onClick={() => {
-                          navigate(`/child-details/${profile._id}`);
-                        }}
-                      >
-                        View Details
-                      </button>
-                    </div>
+          {trail.map((style, index) => (
+            <animated.div key={childProfiles[index]._id} style={style}>
+              <div className="bg-white rounded-lg shadow-sm border">
+                <div className="p-6 flex flex-col sm:flex-row gap-6">
+                  <div className="relative w-full sm:w-48 h-48">
+                    <img
+                      src={
+                        childProfiles[index].image ||
+                        "https://cdn.create.vista.com/api/media/medium/674346484/stock-photo-pretty-cute-indian-girl-child-smiling-looking-camera-green-nature?token=" ||
+                        "/placeholder.svg"
+                      }
+                      alt={childProfiles[index].basicInfo.childFullName}
+                      className="w-full h-full object-cover rounded-lg"
+                    />
                   </div>
 
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div className="flex items-center text-gray-600">
-                      <User2 className="w-5 h-5 mr-2" />
-                      <div>
-                        <p className="text-sm text-gray-500">Gender</p>
-                        <p>{profile?.basicInfo?.gender}</p>
+                  <div className="flex-1">
+                    <div className="flex flex-col sm:flex-row justify-between mb-4">
+                      <div className="flex flex-col sm:flex-row justify-center items-center text-center sm:text-left space-x-5">
+                        <h2 className="text-xl font-semibold mb-2">{childProfiles[index].basicInfo.childFullName}</h2>
+                      </div>
+                      <div className="mt-4 sm:mt-0">
+                        <button className="w-16 px-2 py-1 text-sm bg-[#fee2e2] text-[#9d174d] rounded-md mr-5">
+                          Update
+                        </button>
+                        <button
+                          className="px-2 py-1 text-sm bg-pink-100 text-pink-700 rounded-md"
+                          onClick={() => {
+                            navigate(`/child-details/${childProfiles[index]._id}`)
+                          }}
+                        >
+                          View Details
+                        </button>
                       </div>
                     </div>
-                    <div className="flex items-center text-gray-600">
-                      <Calendar className="w-5 h-5 mr-2" />
-                      <div>
-                        <p className="text-sm text-gray-500">Date of Birth</p>
-                        <p>{profile?.basicInfo?.dateOfBirth}</p>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      <div className="flex items-center text-gray-600">
+                        <User2 className="w-5 h-5 mr-2" />
+                        <div>
+                          <p className="text-sm text-gray-500">Gender</p>
+                          <p>{childProfiles[index].basicInfo.gender}</p>
+                        </div>
                       </div>
-                    </div>
-                    <div className="flex items-center text-gray-600">
-                      <Phone className="w-5 h-5 mr-2" />
-                      <div>
-                        <p className="text-sm text-gray-500">Phone Number</p>
-                        <p>{profile?.basicInfo?.phoneNumber}</p>
+                      <div className="flex items-center text-gray-600">
+                        <Calendar className="w-5 h-5 mr-2" />
+                        <div>
+                          <p className="text-sm text-gray-500">Date of Birth</p>
+                          <p>{childProfiles[index].basicInfo.dateOfBirth}</p>
+                        </div>
                       </div>
-                    </div>
-                    <div className="flex items-center text-gray-600">
-                      <User2 className="w-5 h-5 mr-2" />
-                      <div>
-                        <p className="text-sm text-gray-500">Parent Name</p>
-                        <p>{profile?.basicInfo?.parentGuardianName}</p>
+                      <div className="flex items-center text-gray-600">
+                        <Phone className="w-5 h-5 mr-2" />
+                        <div>
+                          <p className="text-sm text-gray-500">Phone Number</p>
+                          <p>{childProfiles[index].basicInfo.phoneNumber}</p>
+                        </div>
+                      </div>
+                      <div className="flex items-center text-gray-600">
+                        <User2 className="w-5 h-5 mr-2" />
+                        <div>
+                          <p className="text-sm text-gray-500">Parent Name</p>
+                          <p>{childProfiles[index].basicInfo.parentGuardianName}</p>
+                        </div>
                       </div>
                     </div>
                   </div>
                 </div>
               </div>
-            </div>
+            </animated.div>
           ))}
 
           {childProfiles.length === 0 && (
             <div className="p-6 sm:p-8">
-              {" "}
-              {/* Placeholder for child profiles list */}{" "}
               <div className="text-gray-600 text-center py-8">
-                {" "}
-                No child profiles yet. Click the button above to add one!{" "}
-              </div>{" "}
+                No child profiles yet. Click the button above to add one!
+              </div>
             </div>
           )}
         </div>
       </div>
     </div>
-  );
+  )
 }
+ 
+export default ChildProfile
