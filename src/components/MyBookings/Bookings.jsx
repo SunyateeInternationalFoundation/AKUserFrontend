@@ -10,13 +10,8 @@ export default function Bookings() {
   const [rating, setRating] = useState({});
   const [hoveredRating, setHoveredRating] = useState({});
   const [reviews, setReviews] = useState({});
-
-  // const serviceDetails = {
-  //   name: "Computer Services",
-  //   location: "NewYork, USA",
-  //   image:
-  //     "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-wPyFvyCtKqPkXgjw1IQG7qPUPn3jFr.png",
-  // };
+  const [filter , setFilter] = useState("All");
+const [sortOrder, setSortOrder] = useState("Newest")
   useEffect(() => {
     async function fetchingBookingList() {
       try {
@@ -74,6 +69,12 @@ export default function Bookings() {
     }));
   };
 
+  const fileredBooking =  filter === "All" ? bookings : bookings.filter((booking) => booking.status === filter)
+  const sortedBooking = [...fileredBooking].sort((a,b)=>{
+    const dateA = new Date(a.date);
+    const dateB = new Date(b.date);
+    return sortOrder === "Newest" ? dateB - dateA : dateA - dateB;
+  })
   console.log("bookinlist", bookings);
   return (
     <div className="p-8 bg-gray-50 max-h-screen">
@@ -82,22 +83,37 @@ export default function Bookings() {
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-2">
             <span className="text-sm">Sort</span>
-            <select className="px-3 py-2 border rounded-md bg-white text-sm">
-              <option>Newly Added</option>
+            <select className="px-3 py-2 border rounded-md bg-white text-sm"
+            value={sortOrder}
+            onChange={(e)=> setSortOrder(e.target.value)}
+            >
+              <option>Newest</option>
               <option>Oldest First</option>
             </select>
           </div>
           <button className="p-2 border rounded-md hover:bg-gray-50">
             <Calendar className="w-4 h-4" />
           </button>
-          <button className="p-2 border rounded-md hover:bg-gray-50">
-            <Filter className="w-4 h-4" />
-          </button>
         </div>
       </div>
+      <div className="flex gap-4 mb-6">
+        {["All", "On Going", "Completed", "Cancelled"].map((status) => (
+          <button
+            key={status}
+            onClick={() => setFilter(status)}
+            className={`px-4 py-2 rounded-full border ${
+              filter === status
+                ? "bg-blue-600 text-white"
+                : "bg-gray-100 text-gray-700"
+            }`}
+          >
+            {status}
+          </button>
+        ))}
+      </div>
 
-      <div className="space-y-6  h-[700px] overflow-y-auto">
-        {bookings.map((booking) => (
+      <div className="space-y-6 h-[calc(100vh-200px)] overflow-y-auto" >
+        {sortedBooking.map((booking) => (
           <div
             key={booking?._id}
             className="bg-white p-6 rounded-lg cursor-pointer "
@@ -283,28 +299,23 @@ export default function Bookings() {
                             </button>
                           </div>
                         )}
-
-                        {/* <button className="h-5 w-5 border rounded-md hover:bg-gray-50 text-sm">
-                          Cancel
-                        </button> */}
                       </>
                     )}
-                    {/* <button className="p-2 border rounded-md hover:bg-gray-50">
-                      <Heart className="w-5 h-5" />
-                    </button> */}
                   </div>
                 </div>
               </div>
             </div>
           </div>
         ))}
+        <div>
+          {sortedBooking.length === 0 && 
+          <div className="p-6 md:p-8">
+            <div className="text-gray-600 text-center py-8">
+              No bookings found.
+            </div>
+          </div>}
+        </div>
       </div>
-
-      {/* <FeedbackModal
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-        serviceDetails={serviceDetails}
-      /> */}
     </div>
   );
 }
