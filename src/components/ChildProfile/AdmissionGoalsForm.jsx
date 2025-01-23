@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-export function AdmissionGoalsForm({ onNext, onPrev }) {
+export function AdmissionGoalsForm({ onNext, onPrev, admissionGoal }) {
   const [formData, setFormData] = useState({
     reasonForAdmission: "",
     communicationGoal: "",
@@ -13,6 +13,9 @@ export function AdmissionGoalsForm({ onNext, onPrev }) {
   });
   useEffect(() => {
     const getDetails = () => {
+      if (admissionGoal !== null && admissionGoal !== undefined) {
+        sessionStorage.setItem("admissionGoal", JSON.stringify(admissionGoal));
+      }
       const admissionInfo =
         JSON.parse(sessionStorage.getItem("admissionGoal")) || {};
       setFormData({

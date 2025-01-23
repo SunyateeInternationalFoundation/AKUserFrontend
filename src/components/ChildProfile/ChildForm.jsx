@@ -3,7 +3,7 @@ import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 import { Circle, CircleDot, Loader, Upload, User } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { storage } from "../../firebase";
 import { AdmissionGoalsForm } from "./AdmissionGoalsForm";
 import { BasicInfoForm } from "./BasicInfoForm";
@@ -13,12 +13,31 @@ import { MedicalInfoForm } from "./MedicalInfoForm";
 import { TherapyHistoryForm } from "./TherapyHistoryForm";
 
 export default function StaffSelection() {
+  const { id } = useParams();
+  console.log("id>>>>>>>", id);
   const parent = useSelector((state) => state.user);
   const [currentStep, setCurrentStep] = useState(1);
   const [image, setImage] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const [child, setChild] = useState(null);
+
+  useEffect(() => {
+    const fetchChildDetails = async () => {
+      try {
+        const response = await axios.get(
+          `${import.meta.env.VITE_WEBSITE}/child-details/${id}`
+        );
+        setChild(response.data.data);
+        setImagePreview(response.data.data.image);
+      } catch (err) {
+        console.log("Error in fetch Child Details:", err);
+      }
+    };
+
+    fetchChildDetails();
+  }, [id]);
 
   useEffect(() => {
     const getImage = () => {
@@ -85,12 +104,23 @@ export default function StaffSelection() {
     };
     console.log("alldetails,", formData);
     try {
-      const response = await axios.post(
-        `${import.meta.env.VITE_WEBSITE}/new-child`,
-        formData
-      );
+      let response;
+      if (id) {
+        response = await axios.put(
+          `${import.meta.env.VITE_WEBSITE}/update-child/${id}`,
+          formData
+        );
+        alert("Form updated successfully!");
+      } else {
+        response = await axios.post(
+          `${import.meta.env.VITE_WEBSITE}/new-child`,
+          formData
+        );
+        alert("Form submitted successfully!");
+      }
+
       console.log("Form submitted successfully!", response.data);
-      alert("Form submitted successfully!");
+
       navigate("/child-profile");
       sessionStorage.clear();
     } catch (err) {
@@ -140,15 +170,41 @@ export default function StaffSelection() {
   const renderForm = () => {
     switch (currentStep) {
       case 1:
-        return <BasicInfoForm onNext={handleNext} />;
+        return (
+          <BasicInfoForm onNext={handleNext} basicInfo={child?.basicInfo} />
+        );
       case 2:
-        return <MedicalInfoForm onNext={handleNext} onPrev={handlePrev} />;
+        return (
+          <MedicalInfoForm
+            onNext={handleNext}
+            onPrev={handlePrev}
+            medicalInfo={child?.extraDetails?.medicalInfo}
+          />
+        );
       case 3:
-        return <BehavioralInfoForm onNext={handleNext} onPrev={handlePrev} />;
+        return (
+          <BehavioralInfoForm
+            onNext={handleNext}
+            onPrev={handlePrev}
+            behavioralInfo={child?.extraDetails?.behavioralInfo}
+          />
+        );
       case 4:
-        return <TherapyHistoryForm onNext={handleNext} onPrev={handlePrev} />;
+        return (
+          <TherapyHistoryForm
+            onNext={handleNext}
+            onPrev={handlePrev}
+            therapyHistory={child?.extraDetails?.therapyHistory}
+          />
+        );
       case 5:
-        return <AdmissionGoalsForm onNext={handleNext} onPrev={handlePrev} />;
+        return (
+          <AdmissionGoalsForm
+            onNext={handleNext}
+            onPrev={handlePrev}
+            admissionGoal={child?.extraDetails?.admissionGoal}
+          />
+        );
       case 6:
         return (
           <DocumentUploadForm onSubmit={handleSubmit} onPrev={handlePrev} />
@@ -159,7 +215,7 @@ export default function StaffSelection() {
   };
 
   // console.log("childImage", imagePreview);
-
+  console.log("child", child);
   return (
     <div className="flex p-6 bg-gray-100 h-[750px] mt-23 mx-44">
       <div className="w-1/4 bg-gradient-to-b from-slate-900 to-slate-800 text-white p-6 rounded-xl">
@@ -170,7 +226,7 @@ export default function StaffSelection() {
             <div className="relative mb-4">
               <div className="w-20 h-20 rounded-full overflow-hidden bg-slate-700 flex items-center justify-center">
                 {loading ? (
-                  <Loader className="w-8 h-8 text-blue-500 animate-spin" /> // Show spinner
+                  <Loader className="w-8 h-8 text-blue-500 animate-spin" />
                 ) : imagePreview ? (
                   <img
                     src={imagePreview}
