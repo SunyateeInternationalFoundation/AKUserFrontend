@@ -49,7 +49,7 @@ const ChildDetailsPage = () => {
         <div className="p-8">
           <div className="flex justify-between items-center mb-8">
             <h1 className="text-4xl font-bold text-indigo-800">
-              Child Details
+              {child?.basicInfo?.childFullName}
             </h1>
             {/* <div className="space-x-4">
               <button className="px-6 py-2 bg-gray-200 text-gray-800 rounded-full hover:bg-gray-300 transition-colors duration-300">

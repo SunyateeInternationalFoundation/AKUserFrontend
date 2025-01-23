@@ -3,13 +3,14 @@ import { useSpring, animated } from "@react-spring/web";
 import { Package2, Wallet } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 function StatsCard({ icon, label, value, change, prefix = "₹" }) {
   const isPositive = change > 0;
   const { number } = useSpring({
-    from: { number: 0  },
+    from: { number: 0 },
     number: typeof value === "number" ? value : 0,
     delay: 100,
-    config: {tension: 20, friction: 14, precision: 10},
+    config: { tension: 20, friction: 14, precision: 10 },
   });
   const { changeNumber } = useSpring({
     from: { changeNumber: 0 },
@@ -44,7 +45,7 @@ function StatsCard({ icon, label, value, change, prefix = "₹" }) {
 const ParentDashboard = () => {
   const [bookings, setBookings] = useState([]);
   const parent = useSelector((state) => state.user);
-
+  const navigate = useNavigate();
   useEffect(() => {
     async function fetchingBookingList() {
       try {
@@ -171,7 +172,17 @@ const ParentDashboard = () => {
         </div>
 
         <div className="bg-white rounded-xl border p-6">
-          <h2 className="text-lg font-semibold mb-4">Recent Booking</h2>
+          <div className="flex items-start justify-between text-center">
+            <h2 className="text-lg font-semibold mb-4">Recent Booking</h2>
+            <span className="text-blue-500 text-sm font-medium cursor-pointer hover:underline"
+            onClick={()=>{
+             navigate('/bookings')
+            }}
+            >
+              View All
+            </span>
+          </div>
+
           <div className="space-y-4">
             {ongoingBookings.map((booking, index) => (
               <div key={index} className="flex items-center justify-between">
@@ -200,9 +211,6 @@ const ParentDashboard = () => {
                     alt=""
                     className="w-10 h-10 rounded-full"
                   />
-                  <button className="px-3 py-1 text-sm border rounded-lg hover:bg-gray-50">
-                    Cancel
-                  </button>
                 </div>
               </div>
             ))}
