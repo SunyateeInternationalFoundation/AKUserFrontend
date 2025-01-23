@@ -39,6 +39,7 @@ const ParentHome = () => {
               path="/child-profile/add-profile"
               element={<StaffSelection />}
             />
+            <Route path="/update-child/:id" element={<StaffSelection />} />
             <Route path="/child-details/:id" element={<ChildDetailsPage />} />
             <Route path="/bookings" element={<Bookings />} />
             <Route path="/bookings/:id" element={<ViewBookTracking />} />

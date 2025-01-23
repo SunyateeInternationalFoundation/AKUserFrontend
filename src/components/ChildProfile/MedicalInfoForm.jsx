@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-export function MedicalInfoForm({ onNext, onPrev }) {
+export function MedicalInfoForm({ onNext, onPrev, medicalInfo }) {
   const [formData, setFormData] = useState({
     dateOfDiagnosis: "",
     diagnosingSpecialist: "",
@@ -13,8 +13,11 @@ export function MedicalInfoForm({ onNext, onPrev }) {
 
   useEffect(() => {
     const getDetails = () => {
-      const medicalInfo = JSON.parse(sessionStorage.getItem("medicalInfo"));
-      setFormData(medicalInfo);
+      if (medicalInfo !== null && medicalInfo !== undefined) {
+        sessionStorage.setItem("medicalInfo", JSON.stringify(medicalInfo));
+      }
+      const medicalData = JSON.parse(sessionStorage.getItem("medicalInfo"));
+      setFormData(medicalData);
     };
     getDetails();
   }, []);

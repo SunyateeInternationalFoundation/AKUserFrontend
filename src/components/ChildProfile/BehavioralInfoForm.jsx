@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-export function BehavioralInfoForm({ onNext, onPrev }) {
+export function BehavioralInfoForm({ onNext, onPrev, behavioralInfo }) {
   const [formData, setFormData] = useState({
     communicationSkills: "",
     communicationDetails: "",
@@ -14,10 +14,16 @@ export function BehavioralInfoForm({ onNext, onPrev }) {
   });
   useEffect(() => {
     const getDetails = () => {
-      const behavioralInfo = JSON.parse(
+      if (behavioralInfo !== null && behavioralInfo !== undefined) {
+        sessionStorage.setItem(
+          "behavioralInfo",
+          JSON.stringify(behavioralInfo)
+        );
+      }
+      const behavioralData = JSON.parse(
         sessionStorage.getItem("behavioralInfo")
       );
-      setFormData(behavioralInfo);
+      setFormData(behavioralData);
     };
     getDetails();
   }, []);

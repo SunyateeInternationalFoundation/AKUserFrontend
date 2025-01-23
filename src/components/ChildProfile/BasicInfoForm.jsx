@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-export function BasicInfoForm({ onNext }) {
+export function BasicInfoForm({ onNext, basicInfo }) {
   const [formData, setFormData] = useState({
     childFullName: "",
     dateOfBirth: "",
@@ -17,21 +17,55 @@ export function BasicInfoForm({ onNext }) {
     secondaryRelationship: "",
     secondaryPhone: "",
   });
+
+  // useEffect(() => {
+  //   const getDetails = async () => {
+  //     if (basicInfo !== null && basicInfo !== undefined) {
+  //       sessionStorage.setItem("basicInfo", JSON.stringify(basicInfo));
+  //     }
+  //   };
+  //   getDetails();
+  // }, [basicInfo]);
+  // useEffect(() => {
+  //   const getDetails = async () => {
+  //     const basicData = JSON.parse(sessionStorage.getItem("basicInfo"));
+  //     setFormData(basicData);
+  //   };
+  //   getDetails();
+  // }, []);
+
   useEffect(() => {
-    const getDetails = async () => {
-      const basicInfo = JSON.parse(sessionStorage.getItem("basicInfo"));
+    const storedBasicInfo = sessionStorage.getItem("basicInfo");
+    if (basicInfo) {
       setFormData(basicInfo);
-    };
-    getDetails();
-  }, []);
-  console.log("formadata", formData);
+    } else if (storedBasicInfo) {
+      setFormData(JSON.parse(storedBasicInfo));
+    } else {
+      setFormData({
+        childFullName: "",
+        dateOfBirth: "",
+        gender: "",
+        parentGuardianName: "",
+        phoneNumber: "",
+        email: "",
+        address: "",
+        preferredLanguage: "",
+        primaryContactName: "",
+        primaryRelationship: "",
+        primaryPhone: "",
+        secondaryContactName: "",
+        secondaryRelationship: "",
+        secondaryPhone: "",
+      });
+    }
+  }, [basicInfo]);
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log(formData);
     sessionStorage.setItem("basicInfo", JSON.stringify(formData));
     onNext();
   };
-  // const basicInfo = JSON.parse(sessionStorage.getItem("basicInfo"));
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
@@ -40,7 +74,7 @@ export function BasicInfoForm({ onNext }) {
     }));
   };
 
-  // console.log("basicInfo", basicInfo);
+  console.log("basicInfo", basicInfo);
   return (
     <div className="w-full h-full max-w-4xl mx-auto p-6 bg-white rounded-lg shadow overflow-y-auto">
       <h2 className="text-2xl font-bold mb-6">Basic Information</h2>

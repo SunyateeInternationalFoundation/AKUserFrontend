@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-export function TherapyHistoryForm({ onNext, onPrev }) {
+export function TherapyHistoryForm({ onNext, onPrev, therapyHistory }) {
   const [formData, setFormData] = useState({
     schoolName: "",
     gradeLevel: "",
@@ -15,10 +15,16 @@ export function TherapyHistoryForm({ onNext, onPrev }) {
 
   useEffect(() => {
     const getDetails = () => {
-      const therapyHistory = JSON.parse(
+      if (therapyHistory !== null && therapyHistory !== undefined) {
+        sessionStorage.setItem(
+          "therapyHistory",
+          JSON.stringify(therapyHistory)
+        );
+      }
+      const therapyHistoryData = JSON.parse(
         sessionStorage.getItem("therapyHistory")
       );
-      setFormData(therapyHistory);
+      setFormData(therapyHistoryData);
     };
     getDetails();
   }, []);
