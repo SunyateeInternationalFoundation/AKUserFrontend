@@ -80,23 +80,9 @@ const [sortOrder, setSortOrder] = useState("Newest")
     <div className="p-8 bg-gray-50 max-h-screen">
       <div className="flex justify-between items-center mb-8">
         <h1 className="text-2xl font-semibold">Booking List</h1>
-        <div className="flex items-center gap-4">
-          <div className="flex items-center gap-2">
-            <span className="text-sm">Sort</span>
-            <select className="px-3 py-2 border rounded-md bg-white text-sm"
-            value={sortOrder}
-            onChange={(e)=> setSortOrder(e.target.value)}
-            >
-              <option>Newest</option>
-              <option>Oldest First</option>
-            </select>
-          </div>
-          <button className="p-2 border rounded-md hover:bg-gray-50">
-            <Calendar className="w-4 h-4" />
-          </button>
-        </div>
       </div>
       <div className="flex gap-4 mb-6">
+        <div className="flex gap-4 flex-1">
         {["All", "On Going", "Completed", "Cancelled"].map((status) => (
           <button
             key={status}
@@ -110,6 +96,23 @@ const [sortOrder, setSortOrder] = useState("Newest")
             {status}
           </button>
         ))}
+        </div>
+
+        <div className="flex items-center gap-4 justify-end">
+          <div className="flex items-center gap-2 ">
+            <span className="text-sm">Sort</span>
+            <select className="px-3 py-2 border rounded-md bg-white text-sm"
+            value={sortOrder}
+            onChange={(e)=> setSortOrder(e.target.value)}
+            >
+              <option>Newest</option>
+              <option>Oldest First</option>
+            </select>
+          </div>
+          <button className="p-2 border rounded-md hover:bg-gray-50">
+            <Calendar className="w-4 h-4" />
+          </button>
+        </div>
       </div>
 
       <div className="space-y-6 h-[calc(100vh-200px)] overflow-y-auto" >
