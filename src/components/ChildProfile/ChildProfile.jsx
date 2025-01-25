@@ -60,7 +60,12 @@ const ChildProfile = () => {
         <div className="space-y-4">
           {trail.map((style, index) => (
             <animated.div key={childProfiles[index]._id} style={style}>
-              <div className="bg-white rounded-lg shadow-sm border">
+              <div
+                className="bg-white rounded-lg shadow-sm border cursor-pointer"
+                onClick={() => {
+                  navigate(`/child-details/${childProfiles[index]._id}`);
+                }}
+              >
                 <div className="p-6 flex flex-col sm:flex-row gap-6">
                   <div className="relative w-full sm:w-48 h-48">
                     <img
@@ -84,7 +89,8 @@ const ChildProfile = () => {
                       <div className="mt-4 sm:mt-0">
                         <button
                           className="w-16 px-2 py-1 text-sm bg-[#fee2e2] text-[#9d174d] rounded-md mr-5"
-                          onClick={() => {
+                          onClick={(e) => {
+                            e.stopPropagation();
                             sessionStorage.clear();
                             navigate(
                               `/update-child/${childProfiles[index]._id}`
@@ -93,7 +99,7 @@ const ChildProfile = () => {
                         >
                           Update
                         </button>
-                        <button
+                        {/* <button
                           className="px-2 py-1 text-sm bg-pink-100 text-pink-700 rounded-md"
                           onClick={() => {
                             navigate(
@@ -102,7 +108,7 @@ const ChildProfile = () => {
                           }}
                         >
                           View Details
-                        </button>
+                        </button> */}
                       </div>
                     </div>
 

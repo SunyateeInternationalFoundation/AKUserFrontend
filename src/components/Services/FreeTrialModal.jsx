@@ -1,5 +1,5 @@
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 export const FreeTrialModal = ({ isOpen, onClose, service }) => {
@@ -12,6 +12,8 @@ export const FreeTrialModal = ({ isOpen, onClose, service }) => {
   const [selectedTime, setSelectedTime] = useState(null);
   const [children, setChildren] = useState([]);
   const [providers, setProviders] = useState([]);
+  const [selectedOption, setSelectedOption] = useState("");
+  const [selectedLocation, setSelectedLocation] = useState("");
   //   const children = [
   //     {
   //       id: 1,
@@ -147,6 +149,8 @@ export const FreeTrialModal = ({ isOpen, onClose, service }) => {
           date: selectedDate,
           time: selectedTime,
           parentId: parent.userId,
+          location: selectedLocation,
+          place: selectedOption,
         }
       );
       if (res.data.success) {
@@ -191,13 +195,87 @@ export const FreeTrialModal = ({ isOpen, onClose, service }) => {
     //   console.log("Error in submitting data", err);
     // }
   };
-
+  console.log("service", service);
   const renderStep = () => {
     switch (step) {
       case 0:
         return (
           <div>
-            <h4 className="text-lg font-semibold mb-4">Select a Child</h4>
+            <h4 className="text-lg font-semibold mb-10">
+              Step 1 - Select Service Type
+            </h4>
+            <div className="space-y-4">
+              {service.sessionType === "both" ? (
+                <div className="space-y-4">
+                  <div
+                    className={`flex items-center px-4 py-8 border text-lg font-medium text-gray-600 rounded-lg cursor-pointer ${
+                      selectedOption === "online"
+                        ? "border-black"
+                        : "border-gray-200"
+                    }`}
+                    onClick={() => setSelectedOption("online")}
+                  >
+                    <span>Online</span>
+                  </div>
+                  <div
+                    className={`flex items-center px-4 py-8 border text-lg font-medium text-gray-600 rounded-lg cursor-pointer ${
+                      selectedOption === "offline"
+                        ? "border-black"
+                        : "border-gray-200"
+                    }`}
+                    onClick={() => setSelectedOption("offline")}
+                  >
+                    <span>Offline</span>
+                  </div>
+                </div>
+              ) : (
+                <div
+                  className={`flex items-center px-4 py-8 border text-lg font-medium text-gray-600 rounded-lg cursor-pointer ${
+                    selectedOption === service.sessionType
+                      ? "border-black"
+                      : "border-gray-200"
+                  }`}
+                  onClick={() => setSelectedOption(service.sessionType)}
+                >
+                  <span>
+                    {service.sessionType.charAt(0).toUpperCase() +
+                      service.sessionType.slice(1).toLowerCase()}
+                  </span>
+                </div>
+              )}
+            </div>
+          </div>
+        );
+      case selectedOption !== "online" ? 1 : "":
+        return (
+          <div>
+            <h4 className="text-lg font-semibold mb-4">
+              {selectedOption !== "online" ? "Step 2" : ""} - Select a Location
+            </h4>
+            <div className="space-y-4">
+              {service.locations.map((place, index) => (
+                <div
+                  key={index}
+                  className={`flex items-center p-4 border rounded-lg cursor-pointer ${
+                    selectedLocation === place
+                      ? "border-black"
+                      : "border-gray-200"
+                  }`}
+                  onClick={() => setSelectedLocation(place)}
+                >
+                  <span>{place}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        );
+      case selectedOption !== "online" ? 2 : 1:
+        return (
+          <div>
+            <h4 className="text-lg font-semibold mb-4">
+              {selectedOption !== "online" ? "Step 3" : "Step 2"} - Select a
+              Child
+            </h4>
             <div className="space-y-4">
               {children.map((child) => (
                 <div
@@ -223,11 +301,12 @@ export const FreeTrialModal = ({ isOpen, onClose, service }) => {
             </div>
           </div>
         );
-      case 1:
+      case selectedOption !== "online" ? 3 : 2:
         return (
           <div>
             <h4 className="text-lg font-semibold mb-4">
-              Select a Service Provider
+              {selectedOption !== "online" ? "Step 4" : "Step 3"} - Select a
+              Service Provider
             </h4>
             <div className="space-y-4">
               {providers.map((provider) => (
@@ -254,10 +333,14 @@ export const FreeTrialModal = ({ isOpen, onClose, service }) => {
             </div>
           </div>
         );
-      case 2:
+      case selectedOption !== "online" ? 4 : 3:
         return (
           <div>
-            <h4 className="text-lg font-semibold mb-4">Select a Date</h4>
+            <h4 className="text-lg font-semibold mb-4">
+              {" "}
+              {selectedOption !== "online" ? "Step 5" : "Step 4"} - Select a
+              Date
+            </h4>
             <div className="grid grid-cols-3 gap-4">
               {dates.map((date) => (
                 <button
@@ -273,10 +356,13 @@ export const FreeTrialModal = ({ isOpen, onClose, service }) => {
             </div>
           </div>
         );
-      case 3:
+      case selectedOption !== "online" ? 5 : 4:
         return (
           <div>
-            <h4 className="text-lg font-semibold mb-4">Select a Time</h4>
+            <h4 className="text-lg font-semibold mb-4">
+              {selectedOption !== "online" ? "Step 6" : "Step 5"} - Select a
+              Time
+            </h4>
             <div className="grid grid-cols-3 gap-4">
               {times.map((time) => (
                 <button
@@ -292,10 +378,13 @@ export const FreeTrialModal = ({ isOpen, onClose, service }) => {
             </div>
           </div>
         );
-      case 4:
+      case selectedOption !== "online" ? 6 : 5:
         return (
           <div>
-            <h4 className="text-lg font-semibold mb-4">Confirm and Pay</h4>
+            <h4 className="text-lg font-semibold mb-4">
+              {selectedOption !== "online" ? "Step 7" : "Step 6"} - Confirm and
+              Pay
+            </h4>
             <p>Please review your booking details and proceed to payment.</p>
             <div className="mt-4">
               <p>
@@ -303,6 +392,12 @@ export const FreeTrialModal = ({ isOpen, onClose, service }) => {
               </p>
               <p>
                 <strong>Provider:</strong> {selectedProvider?.name}
+              </p>
+              <p>
+                <strong>Location:</strong> {selectedLocation}
+              </p>
+              <p>
+                <strong>Place:</strong> {selectedOption}
               </p>
               <p>
                 <strong>Date:</strong>{" "}
@@ -323,7 +418,7 @@ export const FreeTrialModal = ({ isOpen, onClose, service }) => {
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div className="bg-white flex flex-col justify-between rounded-lg p-6 w-[600px] h-[700px]">
+      <div className="bg-white flex flex-col justify-between rounded-lg p-6 w-[900px] h-[700px]">
         <div>
           <div className="flex justify-between items-center mb-4">
             <h3 className="text-xl font-semibold">
@@ -360,15 +455,18 @@ export const FreeTrialModal = ({ isOpen, onClose, service }) => {
               Back
             </button>
           )}
-          <div className="flex-grow"></div>
-          {step < 3 ? (
+          <div className="flex-grow text-center text-lg font-medium">
+            Step {step + 1} of {selectedOption !== "online" ? 7 : 6}
+          </div>
+
+          {step < (selectedOption !== "online" ? 5 : 4) ? (
             <button
               onClick={handleNext}
               className={`bg-[#0891b2] text-white px-4 py-2 rounded-md`}
             >
               Next
             </button>
-          ) : step === 3 ? (
+          ) : step === (selectedOption !== "online" ? 5 : 4) ? (
             <button
               onClick={handleNext}
               className="px-4 py-2 bg-[#0d9488] text-white rounded"

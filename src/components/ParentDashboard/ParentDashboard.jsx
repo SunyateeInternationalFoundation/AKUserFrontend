@@ -1,47 +1,46 @@
 import axios from "axios";
-import { useSpring, animated } from "@react-spring/web";
-import { Package2, Wallet } from "lucide-react";
+import { Package2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-function StatsCard({ icon, label, value, change, prefix = "₹" }) {
-  const isPositive = change > 0;
-  const { number } = useSpring({
-    from: { number: 0 },
-    number: typeof value === "number" ? value : 0,
-    delay: 100,
-    config: { tension: 20, friction: 14, precision: 10 },
-  });
-  const { changeNumber } = useSpring({
-    from: { changeNumber: 0 },
-    changeNumber: change,
-    delay: 100,
-    config: { tension: 20, friction: 14 },
-  });
-  return (
-    <div className="rounded-xl border bg-white p-4 flex items-start justify-between">
-      <div className="space-y-1.5">
-        <div className="flex items-center gap-2">
-          {icon}
-          <span className="text-sm text-gray-500">{label}</span>
-        </div>
-        <p className="text-2xl font-semibold">
-          {prefix}
-          <animated.span>{number.to((n) => Math.floor(n))}</animated.span>
-        </p>
-      </div>
-      <div
-        className={`px-2.5 py-1 rounded-full text-xs font-medium ${
-          isPositive ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700"
-        }`}
-      >
-        <animated.span>
-          {changeNumber.to((n) => `${isPositive ? "+" : ""}${Math.floor(n)}%`)}
-        </animated.span>
-      </div>
-    </div>
-  );
-}
+// function StatsCard({ icon, label, value, change, prefix = "₹" }) {
+//   const isPositive = change > 0;
+//   const { number } = useSpring({
+//     from: { number: 0 },
+//     number: typeof value === "number" ? value : 0,
+//     delay: 100,
+//     config: { tension: 20, friction: 14, precision: 10 },
+//   });
+//   const { changeNumber } = useSpring({
+//     from: { changeNumber: 0 },
+//     changeNumber: change,
+//     delay: 100,
+//     config: { tension: 20, friction: 14 },
+//   });
+//   return (
+//     <div className="rounded-xl border bg-white p-4 flex items-start justify-between">
+//       <div className="space-y-1.5">
+//         <div className="flex items-center gap-2">
+//           {icon}
+//           <span className="text-sm text-gray-500">{label}</span>
+//         </div>
+//         <p className="text-2xl font-semibold">
+//           {prefix}
+//           <animated.span>{number.to((n) => Math.floor(n))}</animated.span>
+//         </p>
+//       </div>
+//       <div
+//         className={`px-2.5 py-1 rounded-full text-xs font-medium ${
+//           isPositive ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700"
+//         }`}
+//       >
+//         <animated.span>
+//           {changeNumber.to((n) => `${isPositive ? "+" : ""}${Math.floor(n)}%`)}
+//         </animated.span>
+//       </div>
+//     </div>
+//   );
+// }
 const ParentDashboard = () => {
   const [bookings, setBookings] = useState([]);
   const parent = useSelector((state) => state.user);
@@ -62,6 +61,23 @@ const ParentDashboard = () => {
     }
     fetchingBookingList();
   }, [parent.userId]);
+  const [childProfiles, setChildProfiles] = useState([]);
+
+  useEffect(() => {
+    async function fetchingChildren() {
+      try {
+        const response = await axios.get(
+          `${import.meta.env.VITE_WEBSITE}/get-children/${parent.userId}`
+        );
+        console.log("res>>><<<<<", response);
+        setChildProfiles(response.data.data);
+      } catch (err) {
+        console.error("Error in fetching children", err);
+      }
+    }
+    fetchingChildren();
+  }, [parent.userId]);
+  console.log("child profiles>>>", childProfiles);
   // const recentTransactions = [
   //   {
   //     type: "Service Booking",
@@ -118,7 +134,7 @@ const ParentDashboard = () => {
     <div className="p-8">
       <h1 className="text-2xl font-semibold mb-6">Dashboard</h1>
 
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
+      {/* <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
         <StatsCard
           icon={<Package2 className="h-4 w-4 text-primary" />}
           label="Total Sessions"
@@ -144,7 +160,7 @@ const ParentDashboard = () => {
           value={0}
           change={16}
         />
-      </div>
+      </div> */}
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div className="bg-white rounded-xl border p-6">
@@ -174,10 +190,11 @@ const ParentDashboard = () => {
         <div className="bg-white rounded-xl border p-6">
           <div className="flex items-start justify-between text-center">
             <h2 className="text-lg font-semibold mb-4">Recent Booking</h2>
-            <span className="text-blue-500 text-sm font-medium cursor-pointer hover:underline"
-            onClick={()=>{
-             navigate('/bookings')
-            }}
+            <span
+              className="text-blue-500 text-sm font-medium cursor-pointer hover:underline"
+              onClick={() => {
+                navigate("/bookings");
+              }}
             >
               View All
             </span>
@@ -217,10 +234,65 @@ const ParentDashboard = () => {
           </div>
         </div>
       </div>
+
+      <div className="bg-white rounded-xl border p-6 mt-10">
+        <div className="flex items-start justify-between text-center">
+          <h2 className="text-lg font-semibold mb-4">Children</h2>
+          <span
+            className="text-blue-500 text-sm font-medium cursor-pointer hover:underline"
+            onClick={() => {
+              navigate("/child-profile");
+            }}
+          >
+            View All
+          </span>
+        </div>
+
+        <div className="space-y-4">
+          {childProfiles.map((child, index) => (
+            <div key={index} className="flex items-center justify-between">
+              <div className="flex items-center gap-4">
+                <div className="w-12 h-12 rounded-lg bg-gray-100 overflow-hidden">
+                  <img
+                    src={
+                      child.image ||
+                      "https://cdn.create.vista.com/api/media/medium/674346484/stock-photo-pretty-cute-indian-girl-child-smiling-looking-camera-green-nature?token=" ||
+                      "/placeholder.svg"
+                    }
+                    alt=""
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+                <div>
+                  <p className="font-medium">
+                    {child?.basicInfo?.childFullName}
+                  </p>
+                  <p className="text-sm text-gray-500">
+                    {child?.basicInfo?.dateOfBirth}
+                  </p>
+                </div>
+              </div>
+              <div className="flex items-center gap-3">
+                <div className="text-right">
+                  <p className="text-sm font-medium text-gray-700">
+                    {child?.basicInfo?.phoneNumber}
+                  </p>
+                  <p className="text-sm text-gray-500">
+                    {child?.basicInfo?.gender}
+                  </p>
+                </div>
+                {/* <img
+                  src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-kTstdaAJo1au7YPJ3WanZtLIdM6NFA.png"
+                  alt=""
+                  className="w-10 h-10 rounded-full"
+                /> */}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
     </div>
   );
 };
 
 export default ParentDashboard;
-
-

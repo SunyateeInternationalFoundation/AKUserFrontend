@@ -1,260 +1,190 @@
-// import axios from "axios";
-// import { ChevronDown, ChevronRight } from "lucide-react";
-// import { useEffect, useState } from "react";
-// import { useParams } from "react-router-dom";
-
-// const ViewBookTracking = () => {
-//   const { id } = useParams();
-
-//   const [selectedSession, setSelectedSession] = useState(null);
-//   const [expandedSession, setExpandedSession] = useState(null);
-//   const [selectedAssignment, setSelectedAssignment] = useState(null);
-//   const [sessions, setSessions] = useState(null);
-
-//   //   const sessionDetails = {
-//   //     totalSessions: 5,
-//   //     sessionDetails: [
-//   //       {
-//   //         session: 1,
-//   //         status: "Completed",
-//   //         assignment: "Give speech therapy morning and evening",
-//   //       },
-//   //       {
-//   //         session: 2,
-//   //         status: "On Going",
-//   //       },
-//   //       {
-//   //         session: 3,
-//   //         status: "UpComing",
-//   //       },
-//   //       {
-//   //         session: 4,
-//   //         status: "UpComing",
-//   //       },
-//   //       {
-//   //         session: 5,
-//   //         status: "UpComing",
-//   //       },
-//   //     ],
-//   //   };
-
-//   useEffect(() => {
-//     async function fetchingSessions() {
-//       try {
-//         const res = await axios.get(
-//           `${import.meta.env.VITE_WEBSITE}/get-sessions/${id}`
-//         );
-//         console.log(res.data.data);
-//         if (res.data.success) {
-//           const totalSessions = res.data.data.serviceId.sessions;
-
-//           const sessionArray = [];
-//           for (let i = 1; i <= totalSessions; i++) {
-//             sessionArray.push({
-//               session: i,
-//               status: i === 1 ? "Completed" : i === 2 ? "On Going" : "Upcoming",
-//             });
-//           }
-
-//           setSessions(sessionArray);
-//         }
-//       } catch (err) {
-//         console.log("Error in getting sessions:", err);
-//       }
-//     }
-//     fetchingSessions();
-//   }, [id]);
-
-//   const handleSessionClick = (session) => {
-//     if (expandedSession === session?.session) {
-//       setExpandedSession(null);
-//     } else {
-//       setExpandedSession(session?.session);
-//     }
-//     setSelectedSession(session);
-//   };
-
-//   const handleAssignmentClick = (session) => {
-//     setSelectedAssignment(session?.assignment);
-//   };
-
-//   return (
-//     <div className="flex min-h-screen bg-[#f8f9fa]">
-//       <div className="w-80 bg-white border-r border-gray-200 overflow-y-auto">
-//         <div className="p-4 border-b border-gray-200">
-//           <h2 className="text-xl font-semibold">Sessions</h2>
-//         </div>
-//         <div className="space-y-1">
-//           {sessions.map((session) => (
-//             <div key={session?.session}>
-//               <button
-//                 onClick={() => handleSessionClick(session)}
-//                 className={`w-full text-left p-4 hover:bg-gray-50 flex items-center justify-between ${
-//                   expandedSession === session?.session ? "bg-blue-50" : ""
-//                 }`}
-//               >
-//                 <span className="font-medium">Session {session?.session}</span>
-//                 {expandedSession === session?.session ? (
-//                   <ChevronDown className="h-5 w-5 text-gray-500" />
-//                 ) : (
-//                   <ChevronRight className="h-5 w-5 text-gray-500" />
-//                 )}
-//               </button>
-
-//               {expandedSession === session?.session && (
-//                 <div className="bg-gray-50 px-4 py-4 space-y-2">
-//                   <div className="flex items-center space-x-2">
-//                     <span className="text-sm text-gray-600">Status:</span>
-//                     <span
-//                       className={`text-sm font-medium ${
-//                         session?.status === "Completed"
-//                           ? "text-green-600"
-//                           : session?.status === "On Going"
-//                           ? "text-blue-600"
-//                           : "text-yellow-600"
-//                       }`}
-//                     >
-//                       {session?.status}
-//                     </span>
-//                   </div>
-
-//                   {session?.assignment && (
-//                     <>
-//                       <hr />
-//                       <button
-//                         onClick={() => handleAssignmentClick(session)}
-//                         className="text-sm text-blue-600 hover:underline"
-//                       >
-//                         View Assignment
-//                       </button>
-//                     </>
-//                   )}
-//                 </div>
-//               )}
-//             </div>
-//           ))}
-//         </div>
-//       </div>
-
-//       <div className="flex-1 p-8">
-//         {selectedAssignment ? (
-//           <div className="bg-white rounded-lg shadow-sm p-6">
-//             <h2 className="text-2xl font-semibold mb-4">Assignment Details</h2>
-//             <div className="prose max-w-none">
-//               <p>{selectedAssignment}</p>
-//             </div>
-//           </div>
-//         ) : (
-//           <div className="flex items-center justify-center h-full text-gray-500">
-//             Select an assignment to view details
-//           </div>
-//         )}
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default ViewBookTracking;
 import axios from "axios";
+import { CheckCircle } from "lucide-react";
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
-const ViewBookTracking = () => {
+const ViewMyService = () => {
   const { id } = useParams();
+  const navigate = useNavigate();
   const [therapy, setTherapy] = useState(null);
-  const [sessions, setSessions] = useState([]);
-  const navigate = useNavigate()
+  const [selectedSession, setSelectedSession] = useState(null);
+  const [assignment, setAssignment] = useState("");
+  const [feedback, setFeedback] = useState("");
+
   useEffect(() => {
-    async function fetchingSessions() {
+    const fetchTherapy = async () => {
       try {
-        const res = await axios.get(
+        const response = await axios.get(
           `${import.meta.env.VITE_WEBSITE}/get-sessions/${id}`
         );
-        console.log(res.data.data);
-        if (res.data.success) {
-          console.log(res.data.data);
-          setTherapy(res.data.data);
-          const totalSessions = res.data.data.serviceId.sessions;
+        console.log("response>>>>", response);
+        if (response.data.success) {
+          const fetchedTherapy = response.data.data;
+          let sessionNumber = 1;
 
-          const sessionArray = [];
-          for (let i = 1; i <= totalSessions; i++) {
-            sessionArray.push({
-              session: i,
-              status: i === 1 ? "Completed" : i === 2 ? "On Going" : "Upcoming",
-            });
+          const updatedSessions = fetchedTherapy?.sessions.map((session) => {
+            if (session.status === "completed") {
+              return {
+                ...session,
+                sessionNumber: sessionNumber++,
+                status: "completed",
+              };
+            }
+
+            return {
+              ...session,
+              sessionNumber: sessionNumber++,
+              status: "pending",
+            };
+          });
+          console.log("updated sessions>>>>", updatedSessions);
+          if (updatedSessions.length === 0) {
+            const newSessions = [];
+            for (let i = 1; i <= fetchedTherapy?.serviceId?.sessions; i++) {
+              newSessions.push({
+                sessionNumber: i,
+                date: new Date(),
+                time: "10:00 AM",
+                status: i === 1 ? "ongoing" : "pending",
+              });
+            }
+            fetchedTherapy.sessions = newSessions;
+          } else {
+            fetchedTherapy.sessions = updatedSessions;
           }
 
-          setSessions(sessionArray);
+          setTherapy(fetchedTherapy);
+          setSelectedSession(fetchedTherapy?.sessions[0]);
+        } else {
+          console.error("Failed to fetch therapy");
         }
-      } catch (err) {
-        console.log("Error in getting sessions:", err);
+      } catch (error) {
+        console.error("Error fetching therapy:", error);
       }
-    }
-    fetchingSessions();
+    };
+    fetchTherapy();
   }, [id]);
 
+  console.log("sessions", therapy);
   const handleSessionClick = (session) => {
-    console.log(`Session ${session.session} clicked!`);
+    setSelectedSession(session);
+    setAssignment(session?.feedback?.assignment);
+    setFeedback(session?.feedback?.therapyFeedback);
+  };
+
+  const getTotalCompletedSessions = () => {
+    return therapy?.sessions.filter((s) => s.status === "completed").length;
   };
 
   return (
-    <div className="flex min-h-screen bg-[#f8f9fa]">
-      <div className="w-80 bg-white border-r border-gray-200 overflow-y-auto">
-      <div className="p-2 border-gray-200">
-      <button
-        onClick={() => navigate('/bookings')} 
-        className="flex items-center text-gray-600 hover:text-gray-900 transition-colors"
-      >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          className="h-5 w-5 mr-2"
-          viewBox="0 0 20 20"
-          fill="currentColor"
-        >
-          <path
-            fillRule="evenodd"
-            d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z"
-            clipRule="evenodd"
-          />
-        </svg>
-        <span className="text-sm font-medium">Back</span>
-      </button>
-    </div>
-        <div className="p-4 border-b border-gray-200">
-          <h2 className="text-xl font-semibold">{`${therapy?.serviceId?.name}'s Sessions`}</h2>
-        </div>
-        <div className="space-y-1">
-          {sessions.map((session) => (
+    <div className="min-h-screen bg-[#F8F7FD]">
+      <header className="bg-white border-b border-gray-100 px-8 py-4">
+        <div className="max-w-7xl mx-auto flex items-center justify-between">
+          <div className="flex items-center space-x-4">
             <button
-              key={session.session}
-              onClick={() => handleSessionClick(session)}
-              className="w-full text-left p-4 hover:bg-gray-50 flex items-center justify-between"
+              onClick={() => navigate("/bookings")}
+              className="text-gray-600 hover:text-gray-900 transition-colors p-2 rounded-full hover:bg-gray-50"
             >
-              <span className="font-medium">Session {session.session}</span>
-              <span
-                className={`text-sm font-medium py-1 px-3 rounded-full ${
-                  session.status === "Completed"
-                    ? "bg-green-100 text-green-600"
-                    : session.status === "On Going"
-                    ? "bg-blue-100 text-blue-600"
-                    : "bg-yellow-100 text-yellow-600"
-                }`}
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-5 w-5"
+                viewBox="0 0 20 20"
+                fill="currentColor"
               >
-                {session.status}
-              </span>
+                <path
+                  fillRule="evenodd"
+                  d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z"
+                  clipRule="evenodd"
+                />
+              </svg>
             </button>
-          ))}
+            <h1 className="text-xl font-semibold">
+              {therapy?.serviceId?.name}
+            </h1>
+          </div>
+          <div className="flex items-center space-x-2">
+            <span className="px-4 py-2 rounded-full text-sm font-medium bg-green-100 text-green-700">
+              {selectedSession?.status}
+            </span>
+          </div>
         </div>
-      </div>
+      </header>
 
-      <div className="flex-1 p-8">
-        <div className="flex items-center justify-center h-full text-gray-500">
-          Select a session to view details
+      <div className="max-w-7xl mx-auto px-8 py-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+          <div className="bg-white rounded-2xl p-6 shadow-sm">
+            <div className="flex items-start justify-between">
+              <div>
+                <h3 className="text-lg font-semibold mb-2">Overall Progress</h3>
+                <div className="flex items-center space-x-2 text-gray-600">
+                  <CheckCircle className="w-5 h-5 text-green-500" />
+                  <span>
+                    {getTotalCompletedSessions()} of {therapy?.sessions?.length}{" "}
+                    Sessions Completed
+                  </span>
+                </div>
+                <div className="mt-4">
+                  <div className="w-full bg-gray-100 rounded-full h-2">
+                    <div
+                      className="bg-violet-500 h-2 rounded-full"
+                      style={{
+                        width: `${
+                          (getTotalCompletedSessions() /
+                            therapy?.sessions?.length) *
+                          100
+                        }%`,
+                      }}
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="flex gap-8">
+          <div className="w-80 flex-shrink-0">
+            <div className="bg-white rounded-2xl p-4 shadow-sm">
+              <h2 className="text-lg font-semibold mb-4">Sessions</h2>
+              <div className="space-y-2">
+                {therapy?.sessions.map((session) => (
+                  <button
+                    key={session?.sessionNumber}
+                    onClick={() => handleSessionClick(session)}
+                    className={`w-full text-left p-4 rounded-xl transition-colors ${
+                      selectedSession?.sessionNumber === session?.sessionNumber
+                        ? "bg-violet-50 text-violet-700"
+                        : "hover:bg-gray-50"
+                    }`}
+                  >
+                    <div className="flex items-center justify-between">
+                      <span className="font-medium">
+                        Session {session?.sessionNumber}
+                      </span>
+                      <span
+                        className={`text-xs font-medium px-3 py-1 rounded-full ${
+                          session?.status === "completed"
+                            ? "bg-green-100 text-green-700"
+                            : session?.status === "ongoing"
+                            ? "bg-violet-100 text-violet-700"
+                            : "bg-amber-100 text-amber-700"
+                        }`}
+                      >
+                        {session?.status}
+                      </span>
+                    </div>
+                    <p className="text-sm text-gray-500 mt-1">
+                      {new Date(session.date).toLocaleDateString()}
+                    </p>
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
   );
 };
 
-export default ViewBookTracking;
+export default ViewMyService;

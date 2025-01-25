@@ -137,9 +137,9 @@ export function TherapyHistoryForm({ onNext, onPrev, therapyHistory }) {
             </label>
             <input
               type="text"
-              id="otherTherapy"
-              name="otherTherapy"
-              value={formData?.otherTherapy}
+              id="additionalTherapies"
+              name="additionalTherapies"
+              value={formData?.additionalTherapies}
               onChange={handleChange}
               className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             />

@@ -1,5 +1,5 @@
 import axios from "axios";
-import { Calendar, Filter, Star } from "lucide-react";
+import { Calendar, Star } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
@@ -10,8 +10,10 @@ export default function Bookings() {
   const [rating, setRating] = useState({});
   const [hoveredRating, setHoveredRating] = useState({});
   const [reviews, setReviews] = useState({});
-  const [filter , setFilter] = useState("All");
-const [sortOrder, setSortOrder] = useState("Newest")
+  const [filter, setFilter] = useState("All");
+  const [sortOrder, setSortOrder] = useState("Newest");
+  const [feedback, setFeedback] = useState([]);
+
   useEffect(() => {
     async function fetchingBookingList() {
       try {
@@ -29,6 +31,24 @@ const [sortOrder, setSortOrder] = useState("Newest")
     fetchingBookingList();
   }, [parent.userId]);
 
+  useEffect(() => {
+    async function fetchingFeedback() {
+      try {
+        const response = await axios.get(
+          `${import.meta.env.VITE_WEBSITE}/feedback/${parent.userId}`
+        );
+
+        if (response.data.success) {
+          setFeedback(response.data.data);
+        }
+      } catch (err) {
+        console.log("Error in fetching booking list", err);
+      }
+    }
+    fetchingFeedback();
+  }, []);
+
+  console.log("feedback", feedback);
   const handleFeedbackSubmit = async (
     serviceId,
     providerId,
@@ -37,15 +57,34 @@ const [sortOrder, setSortOrder] = useState("Newest")
     bookingId
   ) => {
     try {
-      await axios.post(`${import.meta.env.VITE_WEBSITE}/providers-feedback`, {
-        rating: rating[bookingId],
-        review: reviews[bookingId],
-        serviceId,
-        providerId,
-        parentId,
-        childId,
-        bookingId,
-      });
+      const response = await axios.post(
+        `${import.meta.env.VITE_WEBSITE}/providers-feedback`,
+        {
+          rating: rating[bookingId],
+          review: reviews[bookingId],
+          serviceId,
+          providerId,
+          parentId,
+          childId,
+          bookingId,
+          feedback: true,
+        }
+      );
+      console.log("response,", response);
+      if (response.data.success) {
+        const updatedBooking = response.data.data.serviceBooking;
+        setBookings((prevBookings) =>
+          prevBookings.map((booking) =>
+            booking._id === bookingId
+              ? { ...booking, ...updatedBooking }
+              : booking
+          )
+        );
+        setFeedback((prevFeedback) => [
+          ...prevFeedback,
+          response.data.data.Feedback,
+        ]);
+      }
     } catch (err) {
       console.log("Error in sending feedback:", err);
     }
@@ -69,12 +108,18 @@ const [sortOrder, setSortOrder] = useState("Newest")
     }));
   };
 
-  const fileredBooking =  filter === "All" ? bookings : bookings.filter((booking) => booking.status === filter)
-  const sortedBooking = [...fileredBooking].sort((a,b)=>{
+  const fileredBooking =
+    filter === "All"
+      ? bookings
+      : bookings.filter((booking) => booking?.status === filter);
+
+  console.log("Filtered Booking:", fileredBooking);
+
+  const sortedBooking = [...fileredBooking].sort((a, b) => {
     const dateA = new Date(a.date);
     const dateB = new Date(b.date);
     return sortOrder === "Newest" ? dateB - dateA : dateA - dateB;
-  })
+  });
   console.log("bookinlist", bookings);
   return (
     <div className="p-8 bg-gray-50 max-h-screen">
@@ -83,27 +128,28 @@ const [sortOrder, setSortOrder] = useState("Newest")
       </div>
       <div className="flex gap-4 mb-6">
         <div className="flex gap-4 flex-1">
-        {["All", "On Going", "Completed", "Cancelled"].map((status) => (
-          <button
-            key={status}
-            onClick={() => setFilter(status)}
-            className={`px-4 py-2 rounded-full border ${
-              filter === status
-                ? "bg-blue-600 text-white"
-                : "bg-gray-100 text-gray-700"
-            }`}
-          >
-            {status}
-          </button>
-        ))}
+          {["All", "On Going", "Completed", "Cancelled"].map((status) => (
+            <button
+              key={status}
+              onClick={() => setFilter(status)}
+              className={`px-4 py-2 rounded-full border ${
+                filter === status
+                  ? "bg-blue-600 text-white"
+                  : "bg-gray-100 text-gray-700"
+              }`}
+            >
+              {status}
+            </button>
+          ))}
         </div>
 
         <div className="flex items-center gap-4 justify-end">
           <div className="flex items-center gap-2 ">
             <span className="text-sm">Sort</span>
-            <select className="px-3 py-2 border rounded-md bg-white text-sm"
-            value={sortOrder}
-            onChange={(e)=> setSortOrder(e.target.value)}
+            <select
+              className="px-3 py-2 border rounded-md bg-white text-sm"
+              value={sortOrder}
+              onChange={(e) => setSortOrder(e.target.value)}
             >
               <option>Newest</option>
               <option>Oldest First</option>
@@ -115,7 +161,7 @@ const [sortOrder, setSortOrder] = useState("Newest")
         </div>
       </div>
 
-      <div className="space-y-6 h-[calc(100vh-200px)] overflow-y-auto" >
+      <div className="space-y-6 h-[calc(100vh-200px)] overflow-y-auto">
         {sortedBooking.map((booking) => (
           <div
             key={booking?._id}
@@ -232,9 +278,9 @@ const [sortOrder, setSortOrder] = useState("Newest")
                         </button>
                       </>
                     )}
-                    {booking?.status === "On Going" && (
+                    {/* {booking?.completed && !booking.feedback && (
                       <>
-                        {booking.accepted && (
+                        {booking.completed && (
                           <div
                             className="flex flex-col"
                             onClick={(e) => e.stopPropagation()}
@@ -303,6 +349,120 @@ const [sortOrder, setSortOrder] = useState("Newest")
                           </div>
                         )}
                       </>
+                    )} */}
+                    {booking?.completed && (
+                      <div
+                        className="flex flex-col"
+                        onClick={(e) => e.stopPropagation()}
+                      >
+                        {feedback.find((f) => f.bookingId === booking._id) ? (
+                          <>
+                            <div className="w-[300px] space-y-2 px-6 cursor-default">
+                              <label className="text-sm font-medium">
+                                Your Review
+                              </label>
+                              <p className="p-3 w-full border rounded-lg overflow-y-auto">
+                                {
+                                  feedback.find(
+                                    (f) => f.bookingId === booking._id
+                                  ).review
+                                }
+                              </p>
+                            </div>
+                            <div className="space-y-2 px-6 cursor-default">
+                              <label className="text-base text-gray-800 font-medium">
+                                Your Rating
+                              </label>
+                              <div className="flex gap-1">
+                                {[1, 2, 3, 4, 5].map((star) => (
+                                  <Star
+                                    key={star}
+                                    className={`h-5 w-5 ${
+                                      star <=
+                                      feedback.find(
+                                        (f) => f.bookingId === booking._id
+                                      ).rating
+                                        ? "fill-yellow-400 text-yellow-400"
+                                        : "text-gray-300"
+                                    }`}
+                                  />
+                                ))}
+                              </div>
+                            </div>
+                          </>
+                        ) : (
+                          <>
+                            {!booking.feedback && (
+                              <>
+                                <div className="space-y-2 px-6">
+                                  <label className="text-sm font-medium">
+                                    Write your Review
+                                  </label>
+                                  <textarea
+                                    placeholder="Please write your review"
+                                    value={reviews[booking._id] || ""}
+                                    onChange={(e) =>
+                                      handleReviewChange(
+                                        booking._id,
+                                        e.target.value
+                                      )
+                                    }
+                                    className="w-full min-h-[100px] p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                  />
+                                </div>
+                                <div className="space-y-2 px-6">
+                                  <label className="text-base text-gray-800 font-medium">
+                                    Rate The Service
+                                  </label>
+                                  <div className="flex gap-1">
+                                    {[1, 2, 3, 4, 5].map((star) => (
+                                      <button
+                                        key={star}
+                                        type="button"
+                                        onClick={() =>
+                                          handleRatingChange(booking._id, star)
+                                        }
+                                        onMouseEnter={() =>
+                                          handleHoverRating(booking._id, star)
+                                        }
+                                        onMouseLeave={() =>
+                                          setHoveredRating({})
+                                        }
+                                        className="focus:outline-none"
+                                      >
+                                        <Star
+                                          className={`h-5 w-5 ${
+                                            star <=
+                                            (hoveredRating[booking._id] ||
+                                              rating[booking._id] ||
+                                              0)
+                                              ? "fill-yellow-400 text-yellow-400"
+                                              : "text-gray-300"
+                                          }`}
+                                        />
+                                      </button>
+                                    ))}
+                                  </div>
+                                </div>
+                                <button
+                                  className="self-end px-3 py-1 bg-blue-600 text-white rounded-md hover:bg-blue-700 text-sm"
+                                  onClick={() => {
+                                    handleFeedbackSubmit(
+                                      booking.serviceId._id,
+                                      booking.providerId._id,
+                                      parent.userId,
+                                      booking.childId._id,
+                                      booking._id
+                                    );
+                                  }}
+                                >
+                                  Submit Review
+                                </button>
+                              </>
+                            )}
+                          </>
+                        )}
+                      </div>
                     )}
                   </div>
                 </div>
@@ -311,12 +471,13 @@ const [sortOrder, setSortOrder] = useState("Newest")
           </div>
         ))}
         <div>
-          {sortedBooking.length === 0 && 
-          <div className="p-6 md:p-8">
-            <div className="text-gray-600 text-center py-8">
-              No bookings found.
+          {sortedBooking.length === 0 && (
+            <div className="p-6 md:p-8">
+              <div className="text-gray-600 text-center py-8">
+                No bookings found.
+              </div>
             </div>
-          </div>}
+          )}
         </div>
       </div>
     </div>

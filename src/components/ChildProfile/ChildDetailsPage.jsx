@@ -80,7 +80,7 @@ const ChildDetailsPage = () => {
                 </svg>
               }
             />
-            <TabButton
+            {/* <TabButton
               id="contact"
               label="Contact"
               icon={
@@ -93,7 +93,7 @@ const ChildDetailsPage = () => {
                   <path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z" />
                 </svg>
               }
-            />
+            /> */}
             <TabButton
               id="medical"
               label="Medical"
@@ -144,6 +144,24 @@ const ChildDetailsPage = () => {
                 </svg>
               }
             />
+            <TabButton
+              id="admissionGoal"
+              label="Admission Goal"
+              icon={
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-5 w-5"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M7 2a1 1 0 00-.707 1.707L7 4.414v3.758a1 1 0 01-.293.707l-4 4C.817 14.769 2.156 18 4.828 18h10.343c2.673 0 4.012-3.231 2.122-5.121l-4-4A1 1 0 0113 8.172V4.414l.707-.707A1 1 0 0013 2H7zm2 6.172V4h2v4.172a3 3 0 00.879 2.12l1.027 1.028a4 4 0 00-2.171.102l-.47.156a4 4 0 01-2.53 0l-.563-.187a1.993 1.993 0 00-.114-.035l1.063-1.063A3 3 0 009 8.172z"
+                    clipRule="evenodd"
+                  />
+                </svg>
+              }
+            />
           </div>
 
           <div className="bg-white rounded-xl p-6 shadow-inner">
@@ -172,16 +190,44 @@ const ChildDetailsPage = () => {
                     </p>
                   </div>
                   <div>
-                    <p className="text-sm text-gray-500">Parent/Guardian</p>
+                    <p className="text-sm text-gray-500">
+                      Parent/Guardian Name
+                    </p>
                     <p className="text-lg font-medium">
                       {child?.basicInfo?.parentGuardianName}
+                    </p>
+                  </div>
+                </div>
+                <div className="grid grid-cols-2 gap-6">
+                  <div>
+                    <p className="text-sm text-gray-500">Address</p>
+                    <p className="text-lg font-medium">
+                      {child?.basicInfo?.address}
+                    </p>
+                  </div>
+                  <div>
+                    <p className="text-sm text-gray-500">Email</p>
+                    <p className="text-lg font-medium">
+                      {child?.basicInfo?.email}
+                    </p>
+                  </div>
+                  <div>
+                    <p className="text-sm text-gray-500">Phone Number</p>
+                    <p className="text-lg font-medium">
+                      {child?.basicInfo?.phoneNumber}
+                    </p>
+                  </div>
+                  <div>
+                    <p className="text-sm text-gray-500">Preferred Language</p>
+                    <p className="text-lg font-medium capitalize">
+                      {child?.basicInfo?.preferredLanguage}
                     </p>
                   </div>
                 </div>
               </div>
             )}
 
-            {activeTab === "contact" && (
+            {/* {activeTab === "contact" && (
               <div className="space-y-6 animate-fade-in">
                 <h2 className="text-2xl font-semibold text-indigo-800 mb-4">
                   Contact Information
@@ -213,7 +259,7 @@ const ChildDetailsPage = () => {
                   </div>
                 </div>
               </div>
-            )}
+            )} */}
 
             {activeTab === "medical" && (
               <div className="space-y-6 animate-fade-in">
@@ -249,6 +295,34 @@ const ChildDetailsPage = () => {
                       {child?.extraDetails?.medicalInfo?.coOccurringConditions}
                     </p>
                   </div>
+                  <div>
+                    <p className="text-sm text-gray-500">Medications</p>
+                    <p className="text-lg font-medium">
+                      {child?.extraDetails?.medicalInfo?.medications}
+                    </p>
+                  </div>
+                  <div>
+                    <p className="text-sm text-gray-500">
+                      Primary Healthcare Provider Name
+                    </p>
+                    <p className="text-lg font-medium">
+                      {
+                        child?.extraDetails?.medicalInfo
+                          ?.primaryHealthcareProviderName
+                      }
+                    </p>
+                  </div>
+                  <div>
+                    <p className="text-sm text-gray-500">
+                      Primary Healthcare Provider Contact
+                    </p>
+                    <p className="text-lg font-medium">
+                      {
+                        child?.extraDetails?.medicalInfo
+                          ?.primaryHealthcareProviderContact
+                      }
+                    </p>
+                  </div>
                 </div>
               </div>
             )}
@@ -268,15 +342,67 @@ const ChildDetailsPage = () => {
                     </p>
                   </div>
                   <div>
+                    <p className="text-sm text-gray-500">
+                      Communication Details
+                    </p>
+                    <p className="text-lg font-medium">
+                      {
+                        child?.extraDetails?.behavioralInfo
+                          ?.communicationDetails
+                      }
+                    </p>
+                  </div>
+                  <div>
                     <p className="text-sm text-gray-500">Social Interaction</p>
                     <p className="text-lg font-medium">
                       {child?.extraDetails?.behavioralInfo?.socialInteraction}
                     </p>
                   </div>
                   <div>
+                    <p className="text-sm text-gray-500">
+                      Social Interaction Details
+                    </p>
+                    <p className="text-lg font-medium">
+                      {
+                        child?.extraDetails?.behavioralInfo
+                          ?.socialInteractionDetails
+                      }
+                    </p>
+                  </div>
+                  <div>
                     <p className="text-sm text-gray-500">Sensory Preferences</p>
                     <p className="text-lg font-medium">
                       {child?.extraDetails?.behavioralInfo?.sensoryPreferences}
+                    </p>
+                  </div>
+                  <div>
+                    <p className="text-sm text-gray-500">Sensory Details</p>
+                    <p className="text-lg font-medium">
+                      {child?.extraDetails?.behavioralInfo?.sensoryDetails}
+                    </p>
+                  </div>
+                  <div>
+                    <p className="text-sm text-gray-500">
+                      Repetitive Behaviors
+                    </p>
+                    <p className="text-lg font-medium">
+                      {child?.extraDetails?.behavioralInfo?.repetitiveBehaviors}
+                    </p>
+                  </div>
+                  <div>
+                    <p className="text-sm text-gray-500">
+                      Triggers for Meltdowns
+                    </p>
+                    <p className="text-lg font-medium">
+                      {child?.extraDetails?.behavioralInfo?.meltdownTriggers}
+                    </p>
+                  </div>
+                  <div>
+                    <p className="text-sm text-gray-500">
+                      Strategies that Help Calm
+                    </p>
+                    <p className="text-lg font-medium">
+                      {child?.extraDetails?.behavioralInfo?.calmingStrategies}
                     </p>
                   </div>
                 </div>
@@ -286,7 +412,7 @@ const ChildDetailsPage = () => {
             {activeTab === "therapy" && (
               <div className="space-y-6 animate-fade-in">
                 <h2 className="text-2xl font-semibold text-indigo-800 mb-4">
-                  Therapy History & Goals
+                  Therapy History & Education
                 </h2>
                 <div className="grid grid-cols-2 gap-6">
                   <div>
@@ -308,6 +434,15 @@ const ChildDetailsPage = () => {
                           Occupational Therapy
                         </span>
                       )}
+                      {child?.extraDetails?.therapyHistory
+                        ?.additionalTherapies && (
+                        <span className="px-3 py-1 bg-purple-100 text-purple-800 rounded-full text-sm font-medium">
+                          {
+                            child?.extraDetails?.therapyHistory
+                              ?.additionalTherapies
+                          }
+                        </span>
+                      )}
                     </div>
                   </div>
                   <div>
@@ -317,6 +452,59 @@ const ChildDetailsPage = () => {
                       {child?.extraDetails?.therapyHistory?.gradeLevel}
                     </p>
                   </div>
+                  <div>
+                    <p className="text-sm text-gray-500">
+                      Goals Achieved Through Therapy
+                    </p>
+                    <p className="text-lg font-medium">
+                      {child?.extraDetails?.therapyHistory?.goalsAchieved}
+                    </p>
+                  </div>
+                  <div>
+                    <p className="text-sm text-gray-500">Challenges Observed</p>
+                    <p className="text-lg font-medium">
+                      {child?.extraDetails?.therapyHistory?.challengesObserved}
+                    </p>
+                  </div>
+                  <div>
+                    <p className="text-sm text-gray-500">
+                      Strengths and Interests
+                    </p>
+                    <p className="text-lg font-medium">
+                      {
+                        child?.extraDetails?.therapyHistory
+                          ?.strengthsAndInterests
+                      }
+                    </p>
+                  </div>
+                  {/* <div>
+                    <p className="text-sm text-gray-500">
+                      Preferred Therapy Modalities
+                    </p>
+                    <div className="flex flex-wrap gap-2 mt-2">
+                      {child?.extraDetails?.admissionGoal
+                        ?.preferredTherapyModalities?.length > 0 &&
+                        child?.extraDetails?.admissionGoal?.preferredTherapyModalities.map(
+                          (therapy) => (
+                            <span
+                              key={therapy}
+                              className="px-3 py-1 bg-indigo-100 text-indigo-800 rounded-full text-sm font-medium"
+                            >
+                              {therapy}
+                            </span>
+                          )
+                        )}
+                    </div>
+                  </div> */}
+                </div>
+              </div>
+            )}
+            {activeTab === "admissionGoal" && (
+              <div className="space-y-6 animate-fade-in">
+                <h2 className="text-2xl font-semibold text-indigo-800 mb-4">
+                  Admission Goals
+                </h2>
+                <div className="grid grid-cols-2 gap-6">
                   <div>
                     <p className="text-sm text-gray-500">
                       Preferred Therapy Modalities
@@ -335,6 +523,64 @@ const ChildDetailsPage = () => {
                           )
                         )}
                     </div>
+                  </div>
+                  <div>
+                    <p className="text-sm text-gray-500">
+                      Reason for Admission
+                    </p>
+                    <p className="text-lg font-medium">
+                      {child?.extraDetails?.admissionGoal?.reasonForAdmission}
+                    </p>
+                  </div>
+                  <div>
+                    <p className="text-sm text-gray-500">
+                      Parent/Guardian Goals
+                    </p>
+                    <p className="text-lg font-medium">
+                      {child?.extraDetails?.admissionGoal?.parentGuardianGoals}
+                    </p>
+                  </div>
+                  <div>
+                    <p className="text-sm text-gray-500">
+                      Academic Support Goal
+                    </p>
+                    <p className="text-lg font-medium">
+                      {child?.extraDetails?.admissionGoal?.academicSupportGoal}
+                    </p>
+                  </div>
+                  <div>
+                    <p className="text-sm text-gray-500">
+                      Behavioral Management Goal
+                    </p>
+                    <p className="text-lg font-medium">
+                      {
+                        child?.extraDetails?.admissionGoal
+                          ?.behavioralManagementGoal
+                      }
+                    </p>
+                  </div>
+                  <div>
+                    <p className="text-sm text-gray-500">Communication Goal</p>
+                    <p className="text-lg font-medium">
+                      {child?.extraDetails?.admissionGoal?.communicationGoal}
+                    </p>
+                  </div>
+                  <div>
+                    <p className="text-sm text-gray-500">
+                      Sensory Integration Goal
+                    </p>
+                    <p className="text-lg font-medium">
+                      {
+                        child?.extraDetails?.admissionGoal
+                          ?.sensoryIntegrationGoal
+                      }
+                    </p>
+                  </div>
+                  <div>
+                    <p className="text-sm text-gray-500">Social Skills Goal</p>
+                    <p className="text-lg font-medium">
+                      {child?.extraDetails?.admissionGoal?.socialSkillsGoal}
+                    </p>
                   </div>
                 </div>
               </div>
